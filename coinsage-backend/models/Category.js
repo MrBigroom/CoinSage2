@@ -10,7 +10,7 @@ const categorySchema = new mongoose.Schema({
     type: {
         type: String,
         enum: ['Income', 'Expense'],
-        requierd: true
+        required: true
     }
 });
 
