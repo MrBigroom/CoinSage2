@@ -70,18 +70,43 @@ const PORT = process.env.PORT || 5000;
 
 const startServer = async() => {
     try {
+        if(!process.env.JWT_SECRET || !process.env.MONGODB_URI) {
+            console.error('Missing required environment variables (JWT_SECRET or MONGODB_URI)');
+            process.exit(1);
+        }
+
         await connectDB();
-        app.listen(PORT, () => {
+        const server = app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
             console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
             console.log(`Health check: http://localhost:${PORT}/api/health`);
+        });
+
+        process.on('SIGTERM', () => {
+            console.log('SIGTERM received, shutting down...');
+            server.close(() => {
+                console.log('Server closed');
+                mongoose.connection.close(() => {
+                    console.log('MongoDB connection closed');
+                    process.exit(0);
+                });
+            });
+        });
+
+        process.on('SIGINT', () => {
+            console.log('SIGTERM received, shutting down...');
+            server.close(() => {
+                console.log('Server closed');
+                mongoose.connection.close(() => {
+                    console.log('MongoDB connection closed');
+                    process.exit(0);
+                });
+            });
         });
     } catch(error) {
         console.error('Failed to start server: ', error);
         process.exit(1);
     }
 };
-
-
 
 startServer();

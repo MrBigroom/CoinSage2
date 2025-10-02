@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Category = require('../models/Category');
+const { protect } = require('../middlewares/auth');
 
-router.get('/', async(req, res) => {
+router.get('/', protect, async(req, res) => {
     try {
         const categories = await Category.find({ $or: [{ user_id: req.user.user_id }, { user_id: null }] });;
         res.json({
