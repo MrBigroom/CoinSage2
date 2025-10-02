@@ -23,15 +23,45 @@ const createSendToken = (user, statusCode, res) => {
     });
 };
 
+const signRefreshToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_REFRESH_SECRET, {
+        expiresIn: process.env.JWT_REFRESH_EXPIRES_IN
+    });
+};
+
+router.post('/refresh-token', async(req, res) => {
+    const { refreshToken } = req.body;
+    try {
+        const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+        const user = await User.findById(decoded.id);
+        if(!user) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid refresh token'
+            });
+        }
+        const newToken = signToken(user._id);
+        res.json({
+            success: true,
+            token: newToken
+        });
+    } catch(error) {
+        res.status(401).json({
+            success: false,
+            message: 'Invalid or expired refresh token'
+        });
+    }
+});
+
 router.post('/register', validateRegistration, async(req, res) => {
     try {
         const { username, email, password } = req.body;
 
-        const exsitingUser = await User.findOne({
+        const existingUser = await User.findOne({
             $or: [{ email }, { username }]
         });
 
-        if(exsitingUser) {
+        if(existingUser) {
             return res.status(400).json({
                 success: false,
                 message: 'User already exists with this email or username'
@@ -84,7 +114,7 @@ router.post('/login', validateLogin, async(req, res) => {
     }
 });
 
-router.get('./me', protect, async(req, res) => {
+router.get('/me', protect, async(req, res) => {
     try {
         const user = await User.findById(req.user.id);
         res.status(200).json({
@@ -100,7 +130,7 @@ router.get('./me', protect, async(req, res) => {
     }
 });
 
-router.put('./updatepassword', protect, async(req, res) => {
+router.put('/updatepassword', protect, async(req, res) => {
     try {
         const user = await User.findById(req.user.id).select('+password_hash');
         if(!(await user.correctPassword(req.body.currentPassword, user.password_hash))) {

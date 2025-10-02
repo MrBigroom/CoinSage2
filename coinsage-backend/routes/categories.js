@@ -4,7 +4,7 @@ const Category = require('../models/Category');
 
 router.get('/', async(req, res) => {
     try {
-        const categories = await Category.find();
+        const categories = await Category.find({ $or: [{ user_id: req.user.user_id }, { user_id: null }] });;
         res.json({
             success: true,
             count: categories.length,
