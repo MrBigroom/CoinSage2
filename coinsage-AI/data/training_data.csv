@@ -1,0 +1,188 @@
+description,amount,category
+grocery shopping,-45.99,Groceries
+weekly groceries,-62.50,Groceries
+supermarket,-38.75,Groceries
+milk and bread,-12.30,Groceries
+vegetables market,-28.40,Groceries
+costco bulk buy,-89.90,Groceries
+fruit stall,-15.60,Groceries
+grocery delivery,-53.20,Groceries
+meat purchase,-37.80,Groceries
+snacks,-9.99,Groceries
+household items,-42.10,Groceries
+frozen food,-25.70,Groceries
+organic produce,-49.50,Groceries
+bakery bread,-7.85,Groceries
+grocery store,-60.25,Groceries
+electricity bill,-120.50,Utilities
+water bill,-35.70,Utilities
+internet payment,-60.00,Utilities
+gas bill,-45.30,Utilities
+phone bill,-55.20,Utilities
+cable subscription,-80.00,Utilities
+heating bill,-90.45,Utilities
+utility payment,-70.10,Utilities
+electricity top-up,-100.25,Utilities
+water service,-28.90,Utilities
+internet upgrade,-75.60,Utilities
+gas supply,-50.15,Utilities
+utility bill,-65.80,Utilities
+mobile plan,-48.30,Utilities
+electric bill,-110.00,Utilities
+bus fare,-3.50,Transport
+train ticket,-12.75,Transport
+petrol,-40.00,Transport
+taxi ride,-15.20,Transport
+uber trip,-22.30,Transport
+car fuel,-48.90,Transport
+parking fee,-8.00,Transport
+subway pass,-30.50,Transport
+bike rental,-6.25,Transport
+gas station,-45.60,Transport
+toll fee,-4.50,Transport
+public transport,-10.80,Transport
+fuel top-up,-42.70,Transport
+train fare,-18.90,Transport
+cab ride,-20.15,Transport
+starbucks,-5.50,Food & Beverages
+lunch at cafe,-12.99,Food & Beverages
+dinner takeaway,-18.75,Food & Beverages
+coffee shop,-4.80,Food & Beverages
+pizza order,-22.50,Food & Beverages
+fast food,-9.25,Food & Beverages
+restaurant bill,-35.60,Food & Beverages
+breakfast,-7.30,Food & Beverages
+sushi dinner,-28.90,Food & Beverages
+bubble tea,-6.20,Food & Beverages
+food delivery,-15.40,Food & Beverages
+cafe latte,-5.10,Food & Beverages
+burger meal,-10.50,Food & Beverages
+brunch,-20.25,Food & Beverages
+snack bar,-8.70,Food & Beverages
+movie tickets,-25.00,Entertainment
+concert ticket,-60.50,Entertainment
+streaming subscription,-14.99,Entertainment
+amusement park,-45.80,Entertainment
+gaming purchase,-29.99,Entertainment
+netflix,-12.99,Entertainment
+zoo visit,-18.50,Entertainment
+bowling night,-22.30,Entertainment
+arcade games,-10.75,Entertainment
+music festival,-75.20,Entertainment
+cinema,-20.40,Entertainment
+online game,-15.60,Entertainment
+theme park,-50.25,Entertainment
+movie streaming,-9.99,Entertainment
+theater show,-38.70,Entertainment
+doctor visit,-80.00,Healthcare
+pharmacy,-25.50,Healthcare
+dental checkup,-120.75,Healthcare
+medication,-15.30,Healthcare
+hospital bill,-200.50,Healthcare
+eye exam,-90.25,Healthcare
+prescription,-35.60,Healthcare
+therapy session,-100.00,Healthcare
+medical supplies,-28.90,Healthcare
+health check,-75.40,Healthcare
+vitamins,-12.80,Healthcare
+urgent care,-150.20,Healthcare
+physiotherapy,-65.30,Healthcare
+lab test,-45.10,Healthcare
+health insurance,-180.50,Healthcare
+online course,-99.99,Education
+tuition fee,-500.00,Education
+textbooks,-120.30,Education
+study materials,-45.60,Education
+coding bootcamp,-300.75,Education
+school supplies,-25.90,Education
+language class,-80.50,Education
+exam fee,-60.20,Education
+workshop,-150.40,Education
+e-learning subscription,-29.99,Education
+tutoring,-70.25,Education
+course materials,-35.80,Education
+certification,-200.10,Education
+training program,-250.50,Education
+educational app,-15.99,Education
+flight ticket,-350.80,Travel
+hotel booking,-180.50,Travel
+car rental,-90.25,Travel
+train travel,-75.60,Travel
+vacation package,-500.00,Travel
+airbnb stay,-120.75,Travel
+travel insurance,-45.30,Travel
+cruise ticket,-800.20,Travel
+tour guide,-60.50,Travel
+resort stay,-250.40,Travel
+flight to paris,-400.10,Travel
+bus tour,-55.90,Travel
+travel agency,-150.60,Travel
+hostel,-80.30,Travel
+camping gear,-70.25,Travel
+birthday gift,-35.50,Gifts
+wedding present,-100.00,Gifts
+anniversary gift,-80.75,Gifts
+holiday gift,-45.20,Gifts
+charity donation,-50.00,Gifts
+gift card,-25.99,Gifts
+present for friend,-60.30,Gifts
+baby shower gift,-40.50,Gifts
+graduation gift,-75.10,Gifts
+gift for mom,-55.80,Gifts
+donation,-30.25,Gifts
+surprise gift,-65.40,Gifts
+gift voucher,-20.99,Gifts
+charitable contribution,-85.60,Gifts
+family gift,-70.30,Gifts
+monthly salary,3000.00,Salary
+paycheck,2500.75,Salary
+bonus payment,1000.50,Salary
+salary deposit,3200.25,Salary
+wages,2800.00,Salary
+monthly pay,3100.60,Salary
+job income,2700.80,Salary
+payroll,2900.40,Salary
+salary credit,3050.20,Salary
+work payment,2600.90,Salary
+employee salary,3150.30,Salary
+direct deposit,2950.70,Salary
+job bonus,1200.25,Salary
+monthly wages,2850.10,Salary
+freelance project,800.50,Commission
+consulting fee,600.25,Commission
+sales commission,450.80,Commission
+freelance work,700.40,Commission
+client payment,550.90,Commission
+gig payment,650.30,Commission
+project commission,500.60,Commission
+affiliate income,400.75,Commission
+consultancy,750.20,Commission
+side hustle,300.50,Commission
+freelance design,620.10,Commission
+sales bonus,480.25,Commission
+commission payment,580.90,Commission
+expense reimbursement,200.50,Reimbursement
+travel reimbursement,150.75,Reimbursement
+work expense,120.30,Reimbursement
+office supplies refund,80.50,Reimbursement
+meal reimbursement,60.25,Reimbursement
+business trip refund,250.40,Reimbursement
+expense claim,100.80,Reimbursement
+travel expense,180.60,Reimbursement
+reimbursement payment,90.25,Reimbursement
+work refund,130.50,Reimbursement
+client reimbursement,160.70,Reimbursement
+company expense,110.30,Reimbursement
+stock dividend,500.75,Investment
+crypto profit,800.20,Investment
+bond interest,300.50,Investment
+investment return,600.40,Investment
+dividend payment,450.80,Investment
+stock gain,700.25,Investment
+real estate income,900.60,Investment
+portfolio dividend,400.90,Investment
+interest earned,350.30,Investment
+investment profit,650.10,Investment
+rental income,850.50,Investment
+stock sale,550.70,Investment
+mutual fund,750.20,Investment
