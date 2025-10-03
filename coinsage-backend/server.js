@@ -4,16 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-
-// const connectDB = require('./config/database');
-
-// const authRoutes = require('./routes/auth');
-// const transactionsRoutes = require('./routes/transactions');
-// const budgetsRoutes = require('./routes/budgets');
-// const categoriesRoutes = require('./routes/categories');
-// const aiRoutes = require('./routes/ai');
-
-app.use(cors());
+app.use(cors({ origin: ['http://localhost:3000', 'http://production-url'] }));
 app.use(express.json());
 
 const connectDB = async() => {
@@ -48,6 +39,30 @@ try {
     console.log('Category routes loaded');
 } catch(error) {
     console.error('Error loading category routes: ', error.message);
+}
+
+try {
+    const transactionRoutes = require('./routes/transactions');
+    app.use('/api/transactions', transactionRoutes);
+    console.log('Transactions routes loaded');
+} catch(error) {
+    console.error('Error loading transactions routes: ', error.message);
+}
+
+try {
+    const budgetsRoutes = require('./routes/budgets');
+    app.use('/api/budgets', budgetsRoutes);
+    console.log('Budget routes loaded');
+} catch(error) {
+    console.error('Error loading budgets routes: ', error.message);
+}
+
+try {
+    const aiRoutes = require('./routes/ai');
+    app.use('/api/ai', aiRoutes);
+    console.log('AI routes loaded');
+} catch(error) {
+    console.error('Error loading AI routes: ', error.message);
 }
 
 app.use((err, req, res, next) => {
