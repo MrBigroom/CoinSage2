@@ -8,9 +8,6 @@ import { ActivityIndicator } from 'react-native';
 import { register } from '../../src/services/api';
 import styles from './AuthStyles';
 
-const [showPassword, setShowPassword] = React.useState(false);
-const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
-
 const SignupSchema = Yup.object().shape({
     username: Yup.string()
                     .min(4, 'Username must be at least 4 characters')
@@ -34,14 +31,18 @@ const SignupSchema = Yup.object().shape({
 
 const SignupScreen = () => {
     const navigation = useNavigation();
+    const [showPassword, setShowPassword] = React.useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
 
     const handleSignup = async(values, { setSubmtting }) => {
         try {
             const response = await register(values);
             await AsyncStorage.setItem('token', response.data.token);
+            console.log('Token saved: ', await AsyncStorage.getItem('token'));
             Alert.alert('Success', 'Registered successfully');
             navigation.navigate('Main');
         } catch(error) {
+            console.error('AsyncStorage error: ', error);
             Alert.alert('Error', error.response?.data?.message || 'Registration failed');
         } finally {
             setSubmtting(false);

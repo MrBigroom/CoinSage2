@@ -7,8 +7,6 @@ import { useNavigation } from '@react-navigation/native';
 import { login } from '../../src/services/api';
 import styles from './AuthStyles';
 
-const [showPassword, setShowPassword] = React.useState(false);
-
 const LoginSchema = Yup.object().shape({
     username: Yup.string()
                     .matches(/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers and underscores')
@@ -19,14 +17,17 @@ const LoginSchema = Yup.object().shape({
 
 const LoginScreen = () => {
     const navigation = useNavigation();
+    const [showPassword, setShowPassword] = React.useState(false);
 
     const handleLogin = async(values, { setSubmitting }) => {
         try {
             const response = await login(values);
             await AsyncStorage.setItem('token', response.data.token);
+            console.log('Token saved: ', await AsyncStorage.getItem('token'));
             Alert.alert('Success', 'Logged in successfully');
             navigation.navigate('Main');
         } catch(error) {
+            console.error('AsyncStorage error: ', error);
             Alert.alert('Error', error.response?.data?.message || 'Login failed');
         } finally {
             setSubmitting(false);
@@ -77,7 +78,7 @@ const LoginScreen = () => {
                             <Text style={styles.buttonText}>Login</Text>
                         </TouchableOpacity>
 
-                        <Text>Don't have an account? 
+                        <Text>Don&apos;t have an account? 
                             <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
                                 <Text style={styles.linkText}>Sign Up here</Text>
                             </TouchableOpacity>
