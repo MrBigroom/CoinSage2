@@ -8,6 +8,19 @@ export default StyleSheet.create({
         backgroundColor: '#F5F5F5',
         padding: 20,
     },
+    logoContainer: {
+        alignItems: 'center',
+        marginBottom: 30,
+    },
+    logo: {
+        width: 240,
+        height: 240,
+    },
+    logoText: {
+        fontSize: 32,
+        fontWeight: 'bold',
+        color: '#333',
+    },
     title: {
         fontSize: 28,
         fontWeight: 'bold',
@@ -22,7 +35,8 @@ export default StyleSheet.create({
         backgroundColor: '#FFF',
         borderRadius: 8,
         padding: 15,
-        marginBottom: 15,
+        marginBottom: 5,
+        marginTop: 5,
         borderWidth: 1,
         borderColor: '#DDD',
         fontSize: 16,
@@ -39,6 +53,7 @@ export default StyleSheet.create({
         padding: 15,
         alignItems: 'center',
         marginBottom: 15,
+        marginTop: 15,
     },
     buttonDisabled: {
         backgroundColor: '#99C2FF',
@@ -47,6 +62,16 @@ export default StyleSheet.create({
         color: '#FFF',
         fontSize: 18,
         fontWeight: '600',
+    },
+    linkContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+    },
+    normalText: {
+        fontSize: 16,
+        color: '#333',
     },
     linkText: {
         color: '#007AFF',

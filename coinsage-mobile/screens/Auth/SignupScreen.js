@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, Image } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -51,6 +51,14 @@ const SignupScreen = () => {
 
     return (
         <View style={styles.container}>
+            <View style={styles.logoContainer}>
+                <Image
+                    source={require('../../assets/images/logo.png')}
+                    style={styles.logo}
+                    resizeMode="contain"
+                />
+                <Text style={styles.logoText}>CoinSage</Text>
+            </View>
             <Text style={styles.title}>CoinSage Signup</Text>
             <Formik
                 initialValues={{ username: '', email: '', password: '', confirmPassword: '' }}
@@ -125,7 +133,7 @@ const SignupScreen = () => {
 
                         <Text>Already have an account? 
                             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                                <Text style={styles.linkText}>Login here</Text>
+                                <Text style={styles.linkText}> Login here</Text>
                             </TouchableOpacity>
                         </Text>
                     </View>
