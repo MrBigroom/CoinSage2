@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from './navigation/AppNavigator';
+import { registerRootComponent } from 'expo';
 
-export default function App() {
+function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [initialRoute, setInitialRoute] = useState('Login');
 
@@ -26,3 +27,5 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+export default registerRootComponent(App);
