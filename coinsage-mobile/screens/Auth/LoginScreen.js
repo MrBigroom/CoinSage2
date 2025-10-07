@@ -52,6 +52,7 @@ const LoginScreen = () => {
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isSubmitting }) => (
                     <View style={styles.form}>
+                        <Text style={styles.label}>Username</Text>
                         <TextInput
                             style={styles.input}
                             placeholder="Username"
@@ -63,6 +64,7 @@ const LoginScreen = () => {
                         {touched.username && errors.username && (
                             <Text style={styles.errorText}>{errors.username}</Text>
                         )}
+                        <Text style={styles.label}>Password</Text>
                         <TextInput
                             style={styles.input}
                             placeholder="Password"

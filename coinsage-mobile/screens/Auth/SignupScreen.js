@@ -59,7 +59,7 @@ const SignupScreen = () => {
                 />
                 <Text style={styles.logoText}>CoinSage</Text>
             </View>
-            <Text style={styles.title}>CoinSage Signup</Text>
+            <Text style={styles.title}>Signup</Text>
             <Formik
                 initialValues={{ username: '', email: '', password: '', confirmPassword: '' }}
                 validationSchema={SignupSchema}
@@ -67,6 +67,7 @@ const SignupScreen = () => {
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isSubmitting }) => (
                     <View style={styles.form}>
+                        <Text style={styles.label}>Username</Text>
                         <TextInput
                             style={styles.input}
                             placeholder='Username'
@@ -78,6 +79,7 @@ const SignupScreen = () => {
                         {touched.username && errors.username && (
                             <Text style={styles.errorText}>{errors.username}</Text>
                         )}
+                        <Text style={styles.label}>Email</Text>
                         <TextInput
                             style={styles.input}
                             placeholder='Email'
@@ -90,6 +92,7 @@ const SignupScreen = () => {
                         {touched.email && errors.email && (
                             <Text style={styles.errorText}>{errors.email}</Text>
                         )}
+                        <Text style={styles.label}>Password</Text>
                         <TextInput
                             style={styles.input}
                             placeholder='Password'
@@ -104,6 +107,7 @@ const SignupScreen = () => {
                         <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
                             <Text style={styles.linkText}>{showPassword ? 'Hide' : 'Show'} password</Text>
                         </TouchableOpacity>
+                        <Text style={styles.label}>Confirm Password</Text>
                         <TextInput
                             style={styles.input}
                             placeholder='Confirm Password'

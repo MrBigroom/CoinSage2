@@ -31,6 +31,13 @@ export default StyleSheet.create({
         width: '100%',
         maxWidth: 400,
     },
+    label: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#333',
+        marginBottom: 5,
+        marginLeft: 5,
+    },
     input: {
         backgroundColor: '#FFF',
         borderRadius: 8,
