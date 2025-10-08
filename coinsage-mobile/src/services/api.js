@@ -16,3 +16,12 @@ api.interceptors.request.use(async(config) => {
 
 export const login = (data) => api.post('/auth/login', data);
 export const register = (data) => api.post('/auth/register', data);
+export const getTransactions = () => api.get('/transactions');
+export const createTransaction = (data) => api.post('/transactions', data);
+export const updateTransaction = (id, data) => api.put(`/transactions/${id}`, data);
+export const categoriseTransaction = (data) => api.post('/ai/categorise', data);
+export const getCategories = () => api.get('/categories');
+export const getBudgets = () => api.get('/budgets');
+export const createBudget = (data) => api.post('/budgets', data);
+export const updateBudget = (id, data) => api.put(`/budgets/${id}`, data);
+export const deleteBudget = (id) => api.delete(`/budgets/${id}`);

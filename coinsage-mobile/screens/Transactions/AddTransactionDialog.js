@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import DatePicker from 'react-native-date-picker';
 import { format, parse } from 'date-fns';
-import {  } from '../../src/services/api';
+import { categoriseTransaction, createTransaction } from '../../src/services/api';
 import styles from './TransactionsStyles';
 
 const TransactionSchema = Yup.object().shape({

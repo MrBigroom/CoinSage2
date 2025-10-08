@@ -5,17 +5,14 @@ const { protect } = require('../middlewares/auth');
 
 router.get('/', protect, async(req, res) => {
     try {
-        const budgets = await Budgets.find({ user_id: req.user._id })
-                                        .populate('category_id', 'name type')
-                                        .sort({ start_date: -1 });
+        const budgets = await Budgets.find({ user_id: req.user._id }).populate('category_id', 'name');
         res.json({
-            success: true,
-            count: budgets.length,
-            data: budgets
-        });
+                  success: true,
+                  data: budgets
+                });
     } catch(error) {
         res.status(500).json({
-            success: true,
+            success: false,
             message: error.message
         });
     }
@@ -31,9 +28,11 @@ router.post('/', protect, async(req, res) => {
             start_date,
             end_date
         });
+        await budget.save();
+        const populatedBudget = await Budgets.findById(budget._id).populate('category_id', 'name');
         res.status(201).json({
             success: true,
-            data: budget
+            data: populatedBudget
         });
     } catch(error) {
         res.status(400).json({
@@ -45,15 +44,18 @@ router.post('/', protect, async(req, res) => {
 
 router.put('/:id', protect, async(req, res) => {
     try {
-        const budget = await Budgets.findOne({ _id: req.params.id, user_id: req.user._id });
+        const { category_id, budget_amount, start_date, end_date } = req.body;
+        const budget = await Budgets.findOneAndUpdate(
+            { _id: req.params.id, user_id: req.user.id },
+            { category_id: budget_amount, start_date, end_date },
+            { new: true }
+        ).populate('category_id', 'name');
         if(!budget) {
             return res.status(404).json({
                 success: false,
                 message: 'Budget not found'
             });
         }
-        Object.assign(budget, req.body);
-        await budget.save();
         res.json({
             success: true,
             data: budget
