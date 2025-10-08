@@ -19,6 +19,7 @@ export const register = (data) => api.post('/auth/register', data);
 export const getTransactions = () => api.get('/transactions');
 export const createTransaction = (data) => api.post('/transactions', data);
 export const updateTransaction = (id, data) => api.put(`/transactions/${id}`, data);
+export const deleteTransaction = (id) => api.delete(`/transactions/${id}`);
 export const categoriseTransaction = (data) => api.post('/ai/categorise', data);
 export const getCategories = () => api.get('/categories');
 export const getBudgets = () => api.get('/budgets');
