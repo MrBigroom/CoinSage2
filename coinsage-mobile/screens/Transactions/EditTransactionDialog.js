@@ -6,16 +6,17 @@ import * as Yup from 'yup';
 import { format } from 'date-fns';
 import DatePicker from 'react-native-date-picker';
 import { Picker } from '@react-native-picker/picker'
-import { categoriseTransaction, updateTransaction, getCategories } from '../../src/services/api';
+import { categoriseTransaction, updateTransaction, deleteTransaction, getCategories } from '../../src/services/api';
 import styles from './TransactionsStyles';
 
 const TransactionSchema = Yup.object().shape({
     transaction_amount: Yup.number()
                             .required('Amount is required')
                             .test('non-zero', 'Amount cannot be zero', (value) => value !== 0),
-    description: Yup.string()
-                        .required('Description is required')
-                        .max(100, 'Description must not exceed 100 characters'),
+    title: Yup.string()
+                .required('Title is required')
+                .max(100, 'Title must not exceed 100 characters'),
+    description: Yup.string().optional(),
     date: Yup.date().required('Date is required'),
     category_id: Yup.string().required('Category is required'),
 });
@@ -26,9 +27,9 @@ const EditTransactionDialog = ({ isVisible, onClose, transaction, onTransactionU
     const [openDatePicker, setOpenDatePicker] = useState(false);
     const [categories, setCategories] = useState([]);
 
-    const predictCategory = async(description, amount) => {
+    const predictCategory = async(title, amount) => {
         try {
-            const response = await categoriseTransaction({ description, amount });
+            const response = await categoriseTransaction({ title, amount });
             setPredictedCategory(response.data.category);
             setConfidence(response.data.confidence);
         } catch(error) {
@@ -45,10 +46,34 @@ const EditTransactionDialog = ({ isVisible, onClose, transaction, onTransactionU
         }
     };
 
+    const handleDelete = async() => {
+        Alert.alert(
+            'Confirm Delete',
+            'Are you sure you want to delete this transaction?',
+            [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                    text: 'Delete',
+                    style: 'destructive',
+                    onPress: async() => {
+                        try {
+                            await deleteTransaction(transaction._id);
+                            Alert.alert('Success', 'Transaction deleted successfully');
+                            onTransactionUpdated();
+                            onClose();
+                        } catch(error) {
+                            Alert.alert('Error', error.response?.data?.message || 'Failed to delete transaction');
+                        }
+                    },
+                },
+            ]
+        );
+    };
+
     useEffect(() => {
         fetchCategories();
-        if(transaction?.description && transaction?.transaction_amount) {
-            predictCategory(transaction.description, transaction.transaction_amount);
+        if(transaction?.title && transaction?.transaction_amount) {
+            predictCategory(transaction.title, transaction.transaction_amount);
         }
     }, [transaction]);
 
@@ -59,6 +84,7 @@ const EditTransactionDialog = ({ isVisible, onClose, transaction, onTransactionU
                 <Formik
                     initialValues={{
                         transaction_amount: transaction?.transaction_amount?.toString() || '',
+                        title: transaction?.title || '',
                         description: transaction?.description || '',
                         date: transaction?.date ? new Date(transaction.date) : new Date(),
                         category_id: transaction?.category_id || predictedCategory,
@@ -83,6 +109,7 @@ const EditTransactionDialog = ({ isVisible, onClose, transaction, onTransactionU
                 >
                     {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue, isSubmitting }) => (
                         <View style={styles.input}>
+                            <Text style={styles.label}>Amount</Text>
                             <TextInput
                                 style={styles.input}
                                 placeholder='Amount'
@@ -99,21 +126,36 @@ const EditTransactionDialog = ({ isVisible, onClose, transaction, onTransactionU
                             {touched.transaction_amount && errors.transaction_amount && (
                                 <Text style={styles.errorText}>{errors.transaction_amount}</Text>
                             )}
-                            <TextInput 
+
+                            <Text style={styles.label}>Title</Text>
+                            <TextInput
                                 style={styles.input}
-                                placeholder='Description (e.g., Starbucks)'
                                 onChangeText={(text) => {
-                                    handleChange('description')(text);
+                                    handleChange('title')(text);
                                     if(text && values.transaction_amount) {
                                         predictCategory(text, values.transaction_amount);
                                     }
                                 }}
+                                onBlur={handleBlur('title')}
+                                value={values.title}
+                            />
+                            {touched.title && errors.title && (
+                                <Text style={styles.errorText}>{errors.title}</Text>
+                            )}
+
+                            <Text style={styles.label}>Description (optional)</Text>
+                            <TextInput 
+                                style={styles.input}
+                                placeholder='Description (e.g., Starbucks)'
+                                onChangeText={handleChange('description')}
                                 onBlur={handleBlur('description')}
                                 value={values.description}
                             />
                             {touched.description && errors.description && (
                                 <Text style={styles.errorText}>{errors.description}</Text>
                             )}
+
+                            <Text style={styles.label}>Date</Text>
                             <TouchableOpacity style={styles.input} onPress={() => setOpenDatePicker(true)}>
                                 <Text>{format(values.date, 'yyyy-MM-dd')}</Text>
                             </TouchableOpacity>
@@ -132,6 +174,7 @@ const EditTransactionDialog = ({ isVisible, onClose, transaction, onTransactionU
                                 <Text style={styles.errorText}>{errors.date}</Text>
                             )}
 
+                            <Text style={styles.label}>Category</Text>
                             <View style={styles.pickerContainer}>
                                 <Picker
                                     selectedValue={values.category_id}
@@ -154,13 +197,20 @@ const EditTransactionDialog = ({ isVisible, onClose, transaction, onTransactionU
                                 </Text>
                             )}
 
-                            <View>
+                            <View style={styles.modalButtonContainer}>
                                 <TouchableOpacity
                                     style={[styles.button, isSubmitting && styles.buttonDisabled]}
                                     onPress={handleSubmit}
                                     disabled={isSubmitting}
                                 >
                                     <Text style={styles.buttonText}>Update Transaction</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={[styles.deleteButton, isSubmitting && styles.buttonDisabled]}
+                                    onPress={handleDelete}
+                                    disabled={isSubmitting}
+                                >
+                                    <Text style={styles.buttonText}>Delete</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
                                     <Text style={styles.buttonText}>Cancel</Text>

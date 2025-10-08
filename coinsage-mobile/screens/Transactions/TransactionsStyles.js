@@ -43,6 +43,12 @@ export default StyleSheet.create({
     form: {
         width: '100%',
     },
+    label: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#333',
+        marginBottom: 5,
+    },
     input: {
         backgroundColor: '#FFF',
         borderRadius: 8,
@@ -83,8 +89,16 @@ export default StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
-    cancelButton: {
+    deleteButton: {
         backgroundColor: '#FF4D4F',
+        borderRadius: 8,
+        padding: 15,
+        alignItems: 'center',
+        flex: 1,
+        marginLeft: 10,
+    },
+    cancelButton: {
+        backgroundColor: '#666',
         borderRadius: 8,
         padding: 15,
         alignItems: 'center',
