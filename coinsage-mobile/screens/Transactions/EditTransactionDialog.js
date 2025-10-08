@@ -13,6 +13,7 @@ const TransactionSchema = Yup.object().shape({
     transaction_amount: Yup.number()
                             .required('Amount is required')
                             .test('non-zero', 'Amount cannot be zero', (value) => value !== 0),
+    transaction_type: Yup.string().required('Transaction type is required'),
     title: Yup.string()
                 .required('Title is required')
                 .max(100, 'Title must not exceed 100 characters'),
@@ -27,9 +28,10 @@ const EditTransactionDialog = ({ isVisible, onClose, transaction, onTransactionU
     const [openDatePicker, setOpenDatePicker] = useState(false);
     const [categories, setCategories] = useState([]);
 
-    const predictCategory = async(title, amount) => {
+    const predictCategory = async(title, amount, transaction_type) => {
         try {
-            const response = await categoriseTransaction({ title, amount });
+            const adjustedAmount = transaction_type === 'Expense' ? -Math.abs(amount) : Math.abs(amount);
+            const response = await categoriseTransaction({ title, amount: adjustedAmount });
             setPredictedCategory(response.data.category);
             setConfidence(response.data.confidence);
         } catch(error) {
@@ -73,7 +75,11 @@ const EditTransactionDialog = ({ isVisible, onClose, transaction, onTransactionU
     useEffect(() => {
         fetchCategories();
         if(transaction?.title && transaction?.transaction_amount) {
-            predictCategory(transaction.title, transaction.transaction_amount);
+            predictCategory(
+                transaction.title,
+                Math.abs(transaction.transaction_amount),
+                transaction.transaction_amount < 0 ? 'Expense' : 'Income'
+            );
         }
     }, [transaction]);
 
@@ -83,19 +89,28 @@ const EditTransactionDialog = ({ isVisible, onClose, transaction, onTransactionU
                 <Text style={styles.modalTitle}>Edit Transaction</Text>
                 <Formik
                     initialValues={{
-                        transaction_amount: transaction?.transaction_amount?.toString() || '',
+                        transaction_amount: transaction?.transaction_amount
+                            ? Math.abs(transaction.transaction_amount).toString()
+                            : '',
+                        transaction_type: transaction?.transaction_amount < 0 ? 'Expense' : 'Income',
                         title: transaction?.title || '',
                         description: transaction?.description || '',
                         date: transaction?.date ? new Date(transaction.date) : new Date(),
-                        category_id: transaction?.category_id || predictedCategory,
+                        category_id: transaction?.category_id?.name || predictedCategory,
                     }}
                     validationSchema={TransactionSchema}
                     enableReinitialize
                     onSubmit={async(values, { setSubmitting }) => {
                         try {
+                            const adjustedAmount = values.transaction_type === 'Expense'
+                                                    ? -Math.abs(parseFloat(values.transaction_amount))
+                                                    : Math.abs(parseFloat(values.transaction_amount));
                             await updateTransaction(transaction._id, {
-                                ...values,
+                                title: values.title,
+                                transaction_amount: adjustedAmount,
                                 date: format(values.date, 'yyyy-MM-dd'),
+                                description: values.description,
+                                category_id: categories.find((c) => c.name === values.category_id)?._id,
                             });
                             Alert.alert('Success', 'Transaction updated successfully');
                             onTransactionUpdated();
@@ -110,21 +125,41 @@ const EditTransactionDialog = ({ isVisible, onClose, transaction, onTransactionU
                     {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue, isSubmitting }) => (
                         <View style={styles.input}>
                             <Text style={styles.label}>Amount</Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder='Amount'
-                                keyboardType='numeric'
-                                onChangeText={(text) => {
-                                    handleChange('transaction_amount')(text);
-                                    if(values.description && text) {
-                                        predictCategory(values.description, text);
-                                    }
-                                }}
-                                onBlur={handleBlur('transaction_amount')}
-                                value={values.transaction_amount}
-                            />
+                            <View style={styles.amountContainer}>
+                                <TextInput
+                                    style={[styles.input, styles.amountInput]}
+                                    placeholder='Amount'
+                                    keyboardType='numeric'
+                                    onChangeText={(text) => {
+                                        handleChange('transaction_amount')(text);
+                                        if(values.title && text) {
+                                            predictCategory(values.title, text, values.transaction_type);
+                                        }
+                                    }}
+                                    onBlur={handleBlur('transaction_amount')}
+                                    value={values.transaction_amount}
+                                />
+                                <View style={styles.pickerContainer}>
+                                    <Picker
+                                        style={styles.typePicker}
+                                        selectedValue={values.transaction_type}
+                                        onValueChange={(value) => {
+                                            setFieldValue('transaction_type', value);
+                                            if(values.title && values.transaction_amount) {
+                                                predictCategory(values.title, values.transaction_amount, value);
+                                            }
+                                        }}
+                                    >
+                                        <Picker.Item label='Expense' value='Expense' />
+                                        <Picker.Item label='Income' value='Income' />
+                                    </Picker>
+                                </View>
+                            </View>
                             {touched.transaction_amount && errors.transaction_amount && (
                                 <Text style={styles.errorText}>{errors.transaction_amount}</Text>
+                            )}
+                            {touched.transaction_type && errors.transaction_type && (
+                                <Text style={styles.errorText}>{errors.transaction_type}</Text>
                             )}
 
                             <Text style={styles.label}>Title</Text>
@@ -133,7 +168,7 @@ const EditTransactionDialog = ({ isVisible, onClose, transaction, onTransactionU
                                 onChangeText={(text) => {
                                     handleChange('title')(text);
                                     if(text && values.transaction_amount) {
-                                        predictCategory(text, values.transaction_amount);
+                                        predictCategory(text, values.transaction_amount, values.transaction_type);
                                     }
                                 }}
                                 onBlur={handleBlur('title')}
@@ -191,7 +226,7 @@ const EditTransactionDialog = ({ isVisible, onClose, transaction, onTransactionU
                                 <Text style={styles.errorText}>{errors.category_id}</Text>
                             )}
 
-                            {touched.predictedCategory && (
+                            {predictedCategory && (
                                 <Text style={styles.predictionText}>
                                     Predicted Category: {predictedCategory} (Confidence: {(confidence * 100).toFixed(2)}%)
                                 </Text>

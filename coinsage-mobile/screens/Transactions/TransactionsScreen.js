@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
-import { getTransactions } from "../../src/services/api";
+import { getTransactions, getBalance } from "../../src/services/api";
 import AddTransactionDialog from "./AddTransactionDialog";
 import EditBudgetDialog from "../Budgets/EditBudgetDialog";
 import TransactionItem from "./TransactionItem";
@@ -8,6 +8,7 @@ import styles from './TransactionsStyles';
 
 const TransactionsScreen = () => {
     const [transactions, setTransactions] = useState([]);
+    const [balance, setBalance] = useState(0);
     const [isAddDialogVisible, setAddDialogVisible] = useState(false);
     const [isEditDialogVisible, setEditDialogVisible] = useState(false);
     const [selectedTransaction, setSelectedTransaction] = useState(null);
@@ -16,8 +17,9 @@ const TransactionsScreen = () => {
     const fetchTransactions = async() => {
         try {
             setLoading(true);
-            const response = await getTransactions();
-            setTransactions(response.data.data);
+            const [transactionResponse, balanceResponse] = await Promise.all([getTransactions(), getBalance(),]);
+            setTransactions(transactionResponse.data.data);
+            setBalance(balanceResponse.data.data.balance);
         } catch(error) {
             Alert.alert('Error', 'Failed to fetch transactions');
         } finally {
@@ -37,8 +39,11 @@ const TransactionsScreen = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Transactions</Text>
+            <Text style={[styles.balanceText, balance < 0 ? styles.expense : styles.income]}>
+                Current Balance: RM{balance.toFixed(2)}
+            </Text>
             <TouchableOpacity style={styles.button} onPress={() => setAddDialogVisible(true)}>
-                <Text style={styles.buttonText}>Add Transaction</Text>
+                <Text style={styles.buttonText}>+ Add</Text>
             </TouchableOpacity>
             {loading ? (
                 <ActivityIndicator size="large" color="#007AFF" />

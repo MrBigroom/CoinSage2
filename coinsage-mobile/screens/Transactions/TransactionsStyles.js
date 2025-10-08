@@ -12,6 +12,12 @@ export default StyleSheet.create({
         color: '#333',
         marginBottom: 20,
     },
+    balanceText: {
+        fontSize: 18,
+        fontWeight: '500',
+        color: '#333',
+        marginBottom: 20,
+    },
     button: {
         backgroundColor: '#007AFF',
         borderRadius: 8,
@@ -49,6 +55,15 @@ export default StyleSheet.create({
         color: '#333',
         marginBottom: 5,
     },
+    amountContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 15,
+    },
+    amountInput: {
+        flex: 1,
+        marginRight: 10,
+    },
     input: {
         backgroundColor: '#FFF',
         borderRadius: 8,
@@ -72,6 +87,11 @@ export default StyleSheet.create({
     picker: {
         height: 50,
         fontSize: 16,
+    },
+    typePicker: {
+        height: 50,
+        fontSize: 16,
+        width: 120,
     },
     errorText: {
         color: '#FF4D4F',

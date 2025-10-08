@@ -9,7 +9,7 @@ const axios = require('axios');
 router.get('/', protect, async(req, res) => {
     try {
         const transactions = await Transactions.find({ user_id: req.user._id })
-                                                .populate('category_id', 'name type')
+                                                .populate('category_id', 'name')
                                                 .sort({ date: -1 });
         res.json({
             success: true,
@@ -26,8 +26,7 @@ router.get('/', protect, async(req, res) => {
 
 router.post('/', protect, async(req, res) => {
     try {
-        const { title, transaction_amount, date, description } = req.body;
-        let { category_id } = req.body;
+        const { category_id, title, transaction_amount, date, description } = req.body;
 
         const aiResponse = await axios.post('http://localhost:5001/categorise', {
             description,
@@ -83,15 +82,18 @@ router.post('/', protect, async(req, res) => {
 
 router.put('/:id', protect, async(req, res) => {
     try {
-        const transaction = await Transactions.findOne({ _id: req.params.id, user_id: req.user._id });
+        const { category_id, title, transaction_amount, date, description } = req.body;
+        const transaction = await Transactions.findByIdAndUpdate(
+            { _id: req.params.id, user_id: req.user._id },
+            { category_id, title, transaction_amount, date, description },
+            { new: true }
+        ).populate('category_id', 'name');
         if(!transaction) {
             return res.status(404).json({
                 success: false,
                 message: 'Transaction not found'
             });
         }
-        Object.assign(transaction, req.body);
-        await transaction.save();
         res.json({
             success: true,
             data: transaction
@@ -122,6 +124,22 @@ router.delete('/:id', protect, async(req, res) => {
             success: false,
             message: error.message
         });
+    }
+});
+
+router.get('/balance', protect, async(req, res) => {
+    try {
+        const transactions = await Transactions.find({ user_id: req.user._id });
+        const balance = transactions.reduce((sum, t) => sum + t.transaction_amount, 0);
+        res.json({
+            success: true,
+            data: { balance }
+        });
+    } catch(error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
     }
 });
 

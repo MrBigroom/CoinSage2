@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import Modal from 'react-native-modal';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { Picker } from '@react-native-picker/picker';
 import DatePicker from 'react-native-date-picker';
 import { format } from 'date-fns';
 import { categoriseTransaction, createTransaction } from '../../src/services/api';
@@ -12,6 +13,7 @@ const TransactionSchema = Yup.object().shape({
     transaction_amount: Yup.number()
                             .required('Amount is required')
                             .test('non-zero', 'Amount cannot be zero', (value) => value !== 0),
+    transaction_type: Yup.string().required('Transaction type is required'),
     title: Yup.string()
                 .required('Title is required')
                 .max(100, 'Title must not exceed 100 characters'),
@@ -24,9 +26,10 @@ const AddTransactionDialog = ({ isVisible, onClose, onTransactionAdded }) => {
     const [confidence, setConfidence] = useState(null);
     const [openDatePicker, setOpenDatePicker] = useState(false);
 
-    const predictCategory = async(title, amount) => {
+    const predictCategory = async(title, amount, transaction_type) => {
         try {
-            const response = await categoriseTransaction({ title, amount });
+            const adjustedAmount = transaction_type === 'Expense' ? -Math.abs(amount) : Math.abs(amount);
+            const response = await categoriseTransaction({ title, amount: adjustedAmount });
             setPredictedCategory(response.data.category);
             setConfidence(response.data.confidence);
         } catch(error) {
@@ -39,14 +42,24 @@ const AddTransactionDialog = ({ isVisible, onClose, onTransactionAdded }) => {
             <View style={styles.modalContainer}>
                 <Text style={styles.modalTitle}>Add Transaction</Text>
                 <Formik
-                    initialValues={{ transaction_amount: '', title: '', description: '', date: new Date() }}
+                    initialValues={{
+                        transaction_amount: '',
+                        transaction_type: 'Expense',
+                        title: '',
+                        description: '',
+                        date: new Date()
+                    }}
                     validationSchema={TransactionSchema}
                     onSubmit={async(values, { setSubmtting, resetForm }) => {
                         try {
+                            const adjustedAmount = values.transaction_type === 'Expense'
+                                                    ? -Math.abs(parseFloat(values.transaction_amount))
+                                                    : Math.abs(parseFloat(values.transaction_amount));
                             await createTransaction({
-                                ...values,
+                                title: values.title,
+                                transaction_amount: adjustedAmount,
                                 date: format(values.date, 'yyyy-MM-dd'),
-                                category_id: predictedCategory,
+                                description: values.description,
                             });
                             Alert.alert('Success', 'Transaction added successfully');
                             resetForm();
@@ -64,21 +77,41 @@ const AddTransactionDialog = ({ isVisible, onClose, onTransactionAdded }) => {
                     {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue, isSubmitting }) => (
                         <View style={styles.form}>
                             <Text style={styles.label}>Amount</Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder='Amount'
-                                keyboardType='numeric'
-                                onChangeText={(text) => {
-                                    handleChange('transaction_amount')(text);
-                                    if(values.description && text) {
-                                        predictCategory(values.description, text);
-                                    }
-                                }}
-                                onBlur={handleBlur('transaction_amount')}
-                                value={values.transaction_amount}
-                            />
+                            <View style={styles.amountContainer}>
+                                <TextInput
+                                    style={[styles.input, styles.amountInput]}
+                                    placeholder='Amount'
+                                    keyboardType='numeric'
+                                    onChangeText={(text) => {
+                                        handleChange('transaction_amount')(text);
+                                        if(values.title && text) {
+                                            predictCategory(values.title, text, values.transaction_type);
+                                        }
+                                    }}
+                                    onBlur={handleBlur('transaction_amount')}
+                                    value={values.transaction_amount}
+                                />
+                                <View style={styles.pickerContainer}>
+                                    <Picker
+                                        style={styles.typePicker}
+                                        selectedValue={values.transaction_type}
+                                        onValueChange={(value) => {
+                                            setFieldValue('transaction_type', value);
+                                            if(values.title && values.transaction_amount) {
+                                                predictCategory(values.title, values.transaction_amount, value);
+                                            }
+                                        }}
+                                    >
+                                        <Picker.Item label='Expense' value='Expense' />
+                                        <Picker.Item label='Income' value='Income' />
+                                    </Picker>
+                                </View>
+                            </View>
                             {touched.transaction_amount && errors.transaction_amount && (
                                 <Text style={styles.errorText}>{errors.transaction_amount}</Text>
+                            )}
+                            {touched.transaction_type && errors.transaction_type && (
+                                <Text style={styles.errorText}>{errors.transaction_type}</Text>
                             )}
 
                             <Text style={styles.label}>Title</Text>
@@ -87,7 +120,7 @@ const AddTransactionDialog = ({ isVisible, onClose, onTransactionAdded }) => {
                                 onChangeText={(text) => {
                                     handleChange('title')(text);
                                     if(text && values.transaction_amount) {
-                                        predictCategory(text, values.transaction_amount);
+                                        predictCategory(text, values.transaction_amount, values.transaction_type);
                                     }
                                 }}
                                 onBlur={handleBlur('title')}
