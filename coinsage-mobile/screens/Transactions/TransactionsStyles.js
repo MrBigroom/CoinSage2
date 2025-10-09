@@ -6,6 +6,12 @@ export default StyleSheet.create({
         backgroundColor: '#F5F5F5',
         padding: 20,
     },
+    scrollContainer: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 20,
+    },
     title: {
         fontSize: 28,
         fontWeight: 'bold',

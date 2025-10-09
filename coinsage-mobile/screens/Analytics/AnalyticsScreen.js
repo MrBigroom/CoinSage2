@@ -104,7 +104,12 @@ const AnalyticsScreen = () => {
     const lineData = getWeeklySpending();
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView
+            style={styles.container}
+            contentContainerStyle={styles.scrollContainer}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+        >
             <Text style={styles.title}>Analytics</Text>
 
             <Text style={styles.sectionTitle}>Select Month</Text>

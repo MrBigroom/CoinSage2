@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Alert, ScrollView } from 'react-native';
 import { getTransactions, getBalance } from "../../src/services/api";
 import AddTransactionDialog from "./AddTransactionDialog";
 import EditBudgetDialog from "../Budgets/EditBudgetDialog";
@@ -37,7 +37,12 @@ const TransactionsScreen = () => {
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView
+            style={styles.container}
+            contentContainerStyle={styles.scrollContainer}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+        >
             <Text style={styles.title}>Transactions</Text>
             <Text style={[styles.balanceText, balance < 0 ? styles.expense : styles.income]}>
                 Current Balance: RM{balance.toFixed(2)}
@@ -71,7 +76,7 @@ const TransactionsScreen = () => {
                 transaction={selectedTransaction}
                 onTransactionUpdated={fetchTransactions}
             />
-        </View>
+        </ScrollView>
     );
 };
 

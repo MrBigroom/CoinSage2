@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Alert, ScrollView } from 'react-native';
 import { endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { getBudgets, getTransactions } from '../../src/services/api';
 import AddBudgetDialog from './AddBudgetDialog';
@@ -85,7 +85,12 @@ const BudgetsScreen = () => {
     const comparison = calculateComparison();
 
     return (
-        <View style={styles.container}>
+        <ScrollView
+            style={styles.container}
+            contentContainerStyle={styles.scrollContainer}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+        >
             <Text style={styles.title}>Budgets</Text>
             <TouchableOpacity
                 style={styles.button}
@@ -134,7 +139,7 @@ const BudgetsScreen = () => {
                 budget={selectedBudget}
                 onBudgetUpdated={fetchData}
             />
-        </View>
+        </ScrollView>
     );
 };
 

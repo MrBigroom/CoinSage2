@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator, Image, ScrollView } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -33,7 +33,7 @@ const SignupScreen = () => {
     const [showPassword, setShowPassword] = React.useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
 
-    const handleSignup = async(values, { setSubmtting }) => {
+    const handleSignup = async(values, { setSubmitting }) => {
         try {
             const response = await register(values);
             await AsyncStorage.setItem('token', response.data.token);
@@ -44,12 +44,17 @@ const SignupScreen = () => {
             console.error('AsyncStorage error: ', error);
             Alert.alert('Error', error.response?.data?.message || 'Registration failed');
         } finally {
-            setSubmtting(false);
+            setSubmitting(false);
         }
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView
+            style={styles.container}
+            contentContainerStyle={styles.scrollContainer}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+        >
             <View style={styles.logoContainer}>
                 <Image
                     source={require('../../assets/images/logo.png')}
@@ -103,9 +108,10 @@ const SignupScreen = () => {
                         {touched.password && errors.password && (
                             <Text style={styles.errorText}>{errors.password}</Text>
                         )}
-                        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                        <TouchableOpacity style={styles.passwordToggle} onPress={() => setShowPassword(!showPassword)}>
                             <Text style={styles.linkText}>{showPassword ? 'Hide' : 'Show'} password</Text>
                         </TouchableOpacity>
+
                         <Text style={styles.label}>Confirm Password</Text>
                         <TextInput
                             style={styles.input}
@@ -118,7 +124,7 @@ const SignupScreen = () => {
                         {touched.confirmPassword && errors.confirmPassword && (
                             <Text style={styles.errorText}>{errors.confirmPassword}</Text>
                         )}
-                        <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+                        <TouchableOpacity style={styles.passwordToggle} onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
                             <Text style={styles.linkText}>{showConfirmPassword ? 'Hide' : 'Show'} confirm password</Text>
                         </TouchableOpacity>
 
@@ -134,15 +140,16 @@ const SignupScreen = () => {
                             </TouchableOpacity>
                         )}
 
-                        <Text>Already have an account? 
+                        <View style={styles.linkContainer}>
+                            <Text style={styles.normalText}>Already have an account? </Text>
                             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                                <Text style={styles.linkText}> Login here</Text>
+                                <Text style={styles.linkText}>Login here</Text>
                             </TouchableOpacity>
-                        </Text>
+                        </View>
                     </View>
                 )}
             </Formik>
-        </View>
+        </ScrollView>
     );
 };
 

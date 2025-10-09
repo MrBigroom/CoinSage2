@@ -3,18 +3,22 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: '#F5F5F5',
         padding: 20,
+    },
+    scrollContainer: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 20,
     },
     logoContainer: {
         alignItems: 'center',
         marginBottom: 30,
     },
     logo: {
-        width: 240,
-        height: 240,
+        width: 120,
+        height: 120,
     },
     logoText: {
         fontSize: 32,
@@ -35,6 +39,7 @@ export default StyleSheet.create({
         fontSize: 16,
         fontWeight: '600',
         color: '#333',
+        marginTop: 10,
         marginBottom: 5,
         marginLeft: 5,
     },
@@ -53,6 +58,11 @@ export default StyleSheet.create({
         fontSize: 14,
         marginBottom: 10,
         marginLeft: 5,
+    },
+    passwordToggle: {
+        alignSelf: 'flex-start',
+        marginBottom: 15,
+        marginTop: 5,
     },
     button: {
         backgroundColor: '#007AFF',
@@ -83,6 +93,6 @@ export default StyleSheet.create({
     linkText: {
         color: '#007AFF',
         fontSize: 16,
-        textAlign: 'center'
+        textAlign: 'auto',
     },
 });

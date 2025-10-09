@@ -4,7 +4,7 @@ const aiModelLogSchema = new mongoose.Schema({
     transaction_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Transactions',
-        required: true,
+        required: true
     },
     category_id: {
         type: mongoose.Schema.Types.ObjectId,
@@ -15,11 +15,19 @@ const aiModelLogSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    actual_category: {
+        type: String
+    },
     confidence_score: {
         type: Number,
         required: true,
         min: 0,
         max: 1
+    },
+    status: {
+        type: String,
+        enum: ['Correct', 'Incorrect'],
+        default: 'Correct'
     },
     created_at: {
         type: Date,

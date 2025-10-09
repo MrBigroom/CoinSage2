@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, Image, ScrollView } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -35,7 +35,12 @@ const LoginScreen = () => {
     }
 
     return (
-        <View style={styles.container}>
+        <ScrollView
+            style={styles.container}
+            contentContainerStyle={styles.scrollContainer}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+         >
             <View style={styles.logoContainer}>
                 <Image
                     source={require('../../assets/images/logo.png')}
@@ -76,8 +81,8 @@ const LoginScreen = () => {
                         {touched.password && errors.password && (
                             <Text style={styles.errorText}>{errors.password}</Text>
                         )}
-                        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                            <Text style={styles.linkText}>{showPassword ? 'Hide' : 'Show'} password</Text>
+                        <TouchableOpacity style={styles.passwordToggle} onPress={() => setShowPassword(!showPassword)}>
+                            <Text style={styles.linkText}>{showPassword ? 'Hide' : 'Show'} Password</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
@@ -89,16 +94,15 @@ const LoginScreen = () => {
                         </TouchableOpacity>
 
                         <View style={styles.linkContainer}>
-                            <Text style={styles.normalText}>Don&apos;t have an account?
-                                <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-                                    <Text style={styles.linkText}> Sign Up here</Text>
-                                </TouchableOpacity>
-                            </Text>
+                            <Text style={styles.normalText}>Don&apos;t have an account? </Text>
+                            <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+                                <Text style={styles.linkText}>Sign Up here</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 )}
             </Formik>
-        </View>
+        </ScrollView>
     );
 };
 
