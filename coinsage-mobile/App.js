@@ -77,9 +77,11 @@ function App() {
   }, []);
 
   if(isLoading) {
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ActivityIndicator size="large" color="#007AFF"></ActivityIndicator>
-    </View>
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#007AFF"></ActivityIndicator>
+      </View>
+      );
   }
 
   return (
