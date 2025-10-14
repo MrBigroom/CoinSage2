@@ -20,7 +20,7 @@ const loadRoutes = (routePath, mountPath, routeName) => {
         app.use(mountPath, routes);
         console.log(`${routeName} routes loaded`);
     } catch(error) {
-        console.error(`Error laoding ${routeName} routes: `, error.message);
+        console.error(`Error loading ${routeName} routes: `, error.message);
         process.exit(1);
     }
 };

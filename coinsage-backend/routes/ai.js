@@ -9,7 +9,7 @@ const Transactions = require('../models/Transactions');
 router.post('/categorise', protect, async(req, res) => {
     try{
         const { transaction_id, title, transaction_amount } = req.body;
-        const aiResponse = await axios.post('http://localhost:5001/categorise', {
+        const aiResponse = await axios.post('https://coinsage-ai-service.onrender.com/categorise', {
             title,
             amount: transaction_amount
         });

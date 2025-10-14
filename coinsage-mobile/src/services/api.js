@@ -2,7 +2,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const api = axios.create({
-    baseURL: 'https://coinsage-transaction-categorisation.onrender.com/api',
+    baseURL: 'https://coinsage-backend.onrender.com/api',
     headers: { 'Content-Type': 'application/json' },
 })
 
