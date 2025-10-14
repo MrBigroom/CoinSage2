@@ -8,7 +8,7 @@ const app = express();
 app.use(helmet());
 app.use(cors({
     origin: process.env.NODE_ENV === 'production'
-        ? [process.env.PROD_ORIGIN || 'http://production-url']
+        ? [process.env.PROD_ORIGIN || 'https://coinsage-transaction-categorisation.onrender.com']
         : ['http://localhost:3000'],
     credentials: true,
 }));
