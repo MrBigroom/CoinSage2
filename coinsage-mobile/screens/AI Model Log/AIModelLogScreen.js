@@ -4,7 +4,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { getOverallAccuracy } from '../../src/services/api';
 import RecentLogsTab from "./RecentLogsTab";
 import PerformanceTab from "./PerformanceTab";
-import styles from './AIModelLogSytles';
+import styles from './AIModelLogStyles';
 
 const Tab = createMaterialTopTabNavigator();
 

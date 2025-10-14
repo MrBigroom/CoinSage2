@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text } from 'react-native';
-import styles from './AIModelLogSytles';
+import styles from './AIModelLogStyles';
 
 const PerformanceItem = ({ categoryName, totalTransactions, accuracy, averageConfidence }) => {
     return (

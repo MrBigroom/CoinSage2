@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, ActivityIndicator, Alert } from 'react-native';
 import { getAIModelLogs } from '../../src/services/api';
 import LogItem from './LogItem';
-import styles from './AIModelLogSytles';
+import styles from './AIModelLogStyles';
 
 const RecentLogsTab = () => {
     const [logs, setLogs] = useState([]);

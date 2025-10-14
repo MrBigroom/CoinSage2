@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, ActivityIndicator, Alert } from 'react-native';
 import { getAIPerformance } from '../../src/services/api';
-import styles from './AIModelLogSytles';
+import styles from './AIModelLogStyles';
+import PerformanceItem from "./PerformanceItem";
 
 const PerformanceTab = () => {
     const [performance, setPerformance] = useState([]);
@@ -31,7 +32,7 @@ const PerformanceTab = () => {
                     data={performance}
                     keyExtractor={(item) => item.category_name}
                     renderItem={({ item }) => (
-                        <PerformanceTab
+                        <PerformanceItem
                             category_name={item.category_name}
                             totalTransactions={item.totalTransactions}
                             accuracy={item.accuracy}

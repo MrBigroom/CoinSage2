@@ -85,12 +85,7 @@ const BudgetsScreen = () => {
     const comparison = calculateComparison();
 
     return (
-        <ScrollView
-            style={styles.container}
-            contentContainerStyle={styles.scrollContainer}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
-        >
+        <View style={styles.container}>
             <Text style={styles.title}>Budgets</Text>
             <TouchableOpacity
                 style={styles.button}
@@ -139,7 +134,7 @@ const BudgetsScreen = () => {
                 budget={selectedBudget}
                 onBudgetUpdated={fetchData}
             />
-        </ScrollView>
+        </View>
     );
 };
 

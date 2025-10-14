@@ -7,9 +7,9 @@ router.get('/', protect, async(req, res) => {
     try {
         const budgets = await Budgets.find({ user_id: req.user._id }).populate('category_id', 'name');
         res.json({
-                  success: true,
-                  data: budgets
-                });
+            success: true,
+            data: budgets
+        });
     } catch(error) {
         res.status(500).json({
             success: false,
@@ -46,8 +46,8 @@ router.put('/:id', protect, async(req, res) => {
     try {
         const { category_id, budget_amount, start_date, end_date } = req.body;
         const budget = await Budgets.findOneAndUpdate(
-            { _id: req.params.id, user_id: req.user.id },
-            { category_id: budget_amount, start_date, end_date },
+            { _id: req.params.id, user_id: req.user._id },
+            { category_id, budget_amount, start_date, end_date },
             { new: true }
         ).populate('category_id', 'name');
         if(!budget) {

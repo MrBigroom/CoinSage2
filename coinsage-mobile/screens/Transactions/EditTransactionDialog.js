@@ -12,6 +12,7 @@ import styles from './TransactionsStyles';
 const TransactionSchema = Yup.object().shape({
     transaction_amount: Yup.number()
                             .required('Amount is required')
+                            .positive('Amount must be positive')
                             .test('non-zero', 'Amount cannot be zero', (value) => value !== 0),
     transaction_type: Yup.string().required('Transaction type is required'),
     title: Yup.string()
@@ -105,12 +106,13 @@ const EditTransactionDialog = ({ isVisible, onClose, transaction, onTransactionU
                             const adjustedAmount = values.transaction_type === 'Expense'
                                                     ? -Math.abs(parseFloat(values.transaction_amount))
                                                     : Math.abs(parseFloat(values.transaction_amount));
+                            const selectedCategory = categories.find(c => c.name === values.category_id);
                             await updateTransaction(transaction._id, {
                                 title: values.title,
                                 transaction_amount: adjustedAmount,
                                 date: format(values.date, 'yyyy-MM-dd'),
                                 description: values.description,
-                                category_id: categories.find((c) => c.name === values.category_id)?._id,
+                                category_id: selectedCategory?._id,
                             });
                             Alert.alert('Success', 'Transaction updated successfully');
                             onTransactionUpdated();

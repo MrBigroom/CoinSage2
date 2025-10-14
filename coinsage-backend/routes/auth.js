@@ -12,25 +12,27 @@ const signToken = (id) => {
     });
 };
 
-const createSendToken = (user, statusCode, res) => {
-    const token = signToken(user._id);
-    user.password_hash = undefined;
-
-    res.status(statusCode).json({
-        success: true,
-        token,
-        data: { user }
-    });
-};
-
 const signRefreshToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_REFRESH_SECRET, {
         expiresIn: process.env.JWT_REFRESH_EXPIRES_IN
     });
 };
 
+const createSendToken = (user, statusCode, res) => {
+    const token = signToken(user._id);
+    user.password_hash = undefined;
+    res.status(statusCode).json({
+        success: true,
+        token,
+        data: { user }
+    });
+
+    const refreshToken = signRefreshToken(user._id);
+    res.cookie('refreshToken', refreshToken, { httpOnly: true });
+};
+
 router.post('/refresh-token', async(req, res) => {
-    const { refreshToken } = req.body;
+    const { refreshToken } = req.body || req.cookies.refreshToken;
     try {
         const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
         const user = await User.findById(decoded.id);
@@ -41,9 +43,11 @@ router.post('/refresh-token', async(req, res) => {
             });
         }
         const newToken = signToken(user._id);
+        const newRefreshToken = signRefreshToken(user._id);
         res.json({
             success: true,
-            token: newToken
+            token: newToken,
+            refreshToken: newRefreshToken
         });
     } catch(error) {
         res.status(401).json({
@@ -116,7 +120,7 @@ router.post('/login', validateLogin, async(req, res) => {
 
 router.get('/me', protect, async(req, res) => {
     try {
-        const user = await User.findById(req.user.id);
+        const user = await User.findById(req.user._id);
         res.status(200).json({
             success: true,
             data: { user }
@@ -132,7 +136,7 @@ router.get('/me', protect, async(req, res) => {
 
 router.put('/updatepassword', protect, async(req, res) => {
     try {
-        const user = await User.findById(req.user.id).select('+password_hash');
+        const user = await User.findById(req.user._id).select('+password_hash');
         if(!(await user.correctPassword(req.body.currentPassword, user.password_hash))) {
             return res.status(401).json({
                 success: false,

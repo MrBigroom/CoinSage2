@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Picker } from '@react-native-picker/picker';
 import DatePicker from "react-native-date-picker";
-import { format, isValid } from 'date-fns';
+import { format } from 'date-fns';
 import { getCategories, updateBudget, deleteBudget } from '../../src/services/api';
 import styles from './BudgetsStyles';
 

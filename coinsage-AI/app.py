@@ -18,10 +18,10 @@ def categorise_transaction():
     
     try:
         data = request.json
-        description = data.get('description', '')
+        title = data.get('title', '')
         amount = data.get('amount', 0.0)
 
-        features = f"{description} {amount}"
+        features = f"{title} {amount}"
 
         predicted_category = model.predict([features])[0]
         confidence = model.predict_proba([features])[0].max()

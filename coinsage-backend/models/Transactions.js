@@ -18,7 +18,8 @@ const transactionSchema = new mongoose.Schema({
     },
     transaction_amount: {
         type: Number,
-        required: true
+        required: true,
+        min: 0.01
     },
     date: {
         type: Date,
@@ -35,5 +36,6 @@ const transactionSchema = new mongoose.Schema({
 
 transactionSchema.index({ user_id: 1, date: -1 });
 transactionSchema.index({ user_id: 1, category_id: 1 });
+transactionSchema.index({ title: 'text' });
 
 module.exports = mongoose.model('Transactions', transactionSchema);

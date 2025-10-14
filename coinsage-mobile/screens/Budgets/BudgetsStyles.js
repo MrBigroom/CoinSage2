@@ -50,7 +50,7 @@ export default StyleSheet.create({
         width: '100%',
     },
     label: {
-        fontSize: 166,
+        fontSize: 16,
         fontWeight: '500',
         color: '#333',
         marginBottom: 5,

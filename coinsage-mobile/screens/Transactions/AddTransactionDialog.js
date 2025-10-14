@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import Modal from 'react-native-modal';
 import { Formik } from 'formik';
@@ -50,7 +50,7 @@ const AddTransactionDialog = ({ isVisible, onClose, onTransactionAdded }) => {
                         date: new Date()
                     }}
                     validationSchema={TransactionSchema}
-                    onSubmit={async(values, { setSubmtting, resetForm }) => {
+                    onSubmit={async(values, { setSubmitting, resetForm }) => {
                         try {
                             const adjustedAmount = values.transaction_type === 'Expense'
                                                     ? -Math.abs(parseFloat(values.transaction_amount))
@@ -70,7 +70,7 @@ const AddTransactionDialog = ({ isVisible, onClose, onTransactionAdded }) => {
                         } catch(error) {
                             Alert.alert('Error', error.response?.data?.message || 'Failed to add transaction');
                         } finally {
-                            setSubmtting(false);
+                            setSubmitting(false);
                         }
                     }}
                 >

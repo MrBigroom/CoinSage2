@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Alert, ScrollView } from 'react-native';
 import { getTransactions, getBalance } from "../../src/services/api";
 import AddTransactionDialog from "./AddTransactionDialog";
-import EditBudgetDialog from "../Budgets/EditBudgetDialog";
+import EditTransactionDialog from "./EditTransactionDialog";
 import TransactionItem from "./TransactionItem";
 import styles from './TransactionsStyles';
 
@@ -37,12 +37,7 @@ const TransactionsScreen = () => {
     };
 
     return (
-        <ScrollView
-            style={styles.container}
-            contentContainerStyle={styles.scrollContainer}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
-        >
+        <View style={styles.container}>
             <Text style={styles.title}>Transactions</Text>
             <Text style={[styles.balanceText, balance < 0 ? styles.expense : styles.income]}>
                 Current Balance: RM{balance.toFixed(2)}
@@ -67,7 +62,7 @@ const TransactionsScreen = () => {
                 onClose={() => setAddDialogVisible(false)}
                 onTransactionAdded={fetchTransactions}
             />
-            <EditBudgetDialog
+            <EditTransactionDialog
                 isVisible={isEditDialogVisible}
                 onClose={() => {
                     setEditDialogVisible(false);
@@ -76,7 +71,7 @@ const TransactionsScreen = () => {
                 transaction={selectedTransaction}
                 onTransactionUpdated={fetchTransactions}
             />
-        </ScrollView>
+        </View>
     );
 };
 

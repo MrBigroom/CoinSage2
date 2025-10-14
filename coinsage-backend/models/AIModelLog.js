@@ -16,7 +16,8 @@ const aiModelLogSchema = new mongoose.Schema({
         required: true
     },
     actual_category: {
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category'
     },
     confidence_score: {
         type: Number,

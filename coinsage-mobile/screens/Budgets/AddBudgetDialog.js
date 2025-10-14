@@ -121,7 +121,7 @@ const AddBudgetDialog = ({ isVisible, onClose, onBudgetAdded }) => {
                                 onCancel={() => setOpenStartDatePicker(false)}
                             />
                             {touched.start_date && errors.start_date && (
-                                <Text style={styles.start_date}>{errors.start_date}</Text>
+                                <Text style={styles.errorText}>{errors.start_date}</Text>
                             )}
                             
                             <Text style={styles.label}>End Date</Text>

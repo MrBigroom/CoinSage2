@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator, Image, ScrollView } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -30,8 +30,8 @@ const SignupSchema = Yup.object().shape({
 
 const SignupScreen = () => {
     const navigation = useNavigation();
-    const [showPassword, setShowPassword] = React.useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const handleSignup = async(values, { setSubmitting }) => {
         try {
@@ -41,7 +41,7 @@ const SignupScreen = () => {
             Alert.alert('Success', 'Registered successfully');
             navigation.navigate('Main');
         } catch(error) {
-            console.error('AsyncStorage error: ', error);
+            console.error('Signup error: ', error);
             Alert.alert('Error', error.response?.data?.message || 'Registration failed');
         } finally {
             setSubmitting(false);

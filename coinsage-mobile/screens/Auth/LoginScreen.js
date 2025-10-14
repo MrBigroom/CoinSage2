@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert, Image, ScrollView } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -17,7 +17,7 @@ const LoginSchema = Yup.object().shape({
 
 const LoginScreen = () => {
     const navigation = useNavigation();
-    const [showPassword, setShowPassword] = React.useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleLogin = async(values, { setSubmitting }) => {
         try {
@@ -27,7 +27,7 @@ const LoginScreen = () => {
             Alert.alert('Success', 'Logged in successfully');
             navigation.navigate('Main');
         } catch(error) {
-            console.error('AsyncStorage error: ', error);
+            console.error('Login error: ', error);
             Alert.alert('Error', error.response?.data?.message || 'Login failed');
         } finally {
             setSubmitting(false);

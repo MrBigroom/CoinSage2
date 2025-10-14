@@ -30,11 +30,20 @@ const validateRegistration = [
     body('email')
         .isEmail()
         .withMessage('Please enter a valid email')
-        .normalizeEmail(),
+        .normalizeEmail()
+        .custom(async(value) => {
+            const user = await Users.findOne({ email: value });
+            if(user) {
+                throw new Error('Email is already taken');
+            }
+            return true;
+        }),
     
     body('password')
         .isLength({ min: 6 })
-        .withMessage('Password must be at least 6 characters long'),
+        .withMessage('Password must be at least 6 characters long')
+        .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/)
+        .withMessage('Password must contain one uppercase letter, one lowercase letter, one number and one special character'),
     
     handleValidationErrors
 ];

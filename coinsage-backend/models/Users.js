@@ -22,12 +22,21 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Password is required'],
         minlength: 6,
+        validate: {
+            validator: function(v) {
+                return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(v);
+            },
+            message: 'Password must contain at least one uppercase letter, a lowercase letter, one number and one special character'
+        }
     },
     created_at: {
         type: Date,
         default: Date.now
     }
 });
+
+userSchema.index({ username: 1 });
+userSchema.index({ email: 1 });
 
 userSchema.pre('save', async function(next) {
     if(!this.isModified('password_hash')) return next();

@@ -5,7 +5,7 @@ const { protect } = require('../middlewares/auth');
 
 router.get('/', protect, async(req, res) => {
     try {
-        const categories = await Category.find({ $or: [{ user_id: req.user.user_id }, { user_id: null }] });;
+        const categories = await Category.find();;
         res.json({
             success: true,
             count: categories.length,

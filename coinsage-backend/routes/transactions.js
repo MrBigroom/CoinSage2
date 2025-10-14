@@ -29,7 +29,7 @@ router.post('/', protect, async(req, res) => {
         const { category_id, title, transaction_amount, date, description } = req.body;
 
         const aiResponse = await axios.post('http://localhost:5001/categorise', {
-            description,
+            title,
             amount: transaction_amount
         });
         const { category, confidence } = aiResponse.data;
@@ -65,15 +65,17 @@ router.post('/', protect, async(req, res) => {
             );
         }
 
-        await Budgets.updateMany(
-            {
-                user_id: req.user._id,
-                category_id,
-                start_date: { $lte: transaction.date },
-                end_date: { $gte: transaction.date }
-            },
-            { $inc: { spent_amount: transaction_amount } }
-        );
+        if(transaction_amount < 0) {
+            await Budgets.updateMany(
+                {
+                    user_id: req.user._id,
+                    category_id,
+                    start_date: { $lte: transaction.date },
+                    end_date: { $gte: transaction.date }
+                },
+                { $inc: { spent_amount: Math.abs(transaction_amount) } }
+            );
+        }
         res.status(201).json({ success: true, data: transaction });
     } catch(error) {
         res.status(400).json({ success: false, message: error.messge });
@@ -126,6 +128,17 @@ router.delete('/:id', protect, async(req, res) => {
                 success: false,
                 message: 'Transaction not found'
             });
+        }
+        if(transaction.transaction_amount < 0) {
+            await Budgets.updateMany(
+                {
+                    user_id: req.user._id,
+                    category_id: transaction.category_id,
+                    start_date: { $lte: transaction.date },
+                    end_date: { $gte: transaction.date }
+                },
+                { $inc: { spent_amount: -Math.abs(transaction.transaction_amount) } }
+            );
         }
         res.json({
             success: true,

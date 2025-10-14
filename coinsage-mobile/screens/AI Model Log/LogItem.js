@@ -1,7 +1,7 @@
-import React, { act } from 'react';
+import React from 'react';
 import { View, Text } from 'react-native';
 import { format } from 'date-fns';
-import styles from './AIModelLogSytles';
+import styles from './AIModelLogStyles';
 
 const LogItem = ({ title, date, predictedCategory, confidence, actualCategory, status, amount }) => {
     return (

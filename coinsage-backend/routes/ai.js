@@ -8,10 +8,10 @@ const Transactions = require('../models/Transactions');
 
 router.post('/categorise', protect, async(req, res) => {
     try{
-        const { transaction_id, description, amount } = req.body;
+        const { transaction_id, title, transaction_amount } = req.body;
         const aiResponse = await axios.post('http://localhost:5001/categorise', {
-            description,
-            amount
+            title,
+            amount: transaction_amount
         });
         const { category, confidence } = aiResponse.data;
         const categoryDoc = await Category.findOne({ name: category });
@@ -44,7 +44,7 @@ router.post('/categorise', protect, async(req, res) => {
     }
 });
 
-router.get('./logs', protect, async(req, res) => {
+router.get('/logs', protect, async(req, res) => {
     try{
         const logs = await AIModelLog.find({ transaction_id: {$in: await Transactions.find({ user_id: req.user._id }).distinct('_id') }})
                                         .populate('category_id', 'name type')
@@ -55,7 +55,7 @@ router.get('./logs', protect, async(req, res) => {
             data: logs
         });
     } catch(error) {
-        res.status.json({
+        res.status(500).json({
             success: false,
             message: error.message
         });
