@@ -6,45 +6,33 @@ import { registerRootComponent } from 'expo';
 import { getUser } from './src/services/api';
 import axios from 'axios';
 import { View, ActivityIndicator, Alert } from 'react-native';
+import { UserProvider, useUser } from './src/contexts/UserContext';
 
-const UserContext = React.createContext();
-
-function App() {
+function AppContent() {
   const [isLoading, setIsLoading] = useState(true);
-  const [initialRoute, setInitialRoute] = useState('Login');
-  const [user, setUser] = useState(null);
-  const [accessToken, setAccessToken] = useState(null);
-  const [refreshToken, setRefreshToken] = useState(null);
-
-  const refreshAccessToken = async() => {
-    try {
-      const storedRefreshToken = await AsyncStorage.getItem('refreshToken');
-      if(storedRefreshToken) {
-        const response = await axios.post('http://192.168.0.176:5000/api/auth/refresh-token', { refreshToken: storedRefreshToken });
-        const { token, refreshToken: newRefreshToken } = response.data;
-        await AsyncStorage.setItem('token', token);
-        await AsyncStorage.setItem('refreshToken', newRefreshToken);
-        setAccessToken(token);
-        setRefreshToken(newRefreshToken);
-        return true;
-      }
-      return false;
-    } catch(error) {
-      console.error('Token refresh failed: ', error);
-      await logout();
-      return false;
-    }
-  };
-
-  const logout = async() => {
-    await AsyncStorage.multiRemove(['token', 'refreshToken']);
-    setAccessToken(null);
-    setRefreshToken(null);
-    setUser(null);
-    setInitialRoute('Login');
-  };
+  const { setUser, setAccessToken, setRefreshToken, logout } = useUser();
 
   useEffect(() => {
+    const refreshAccessToken = async() => {
+      try {
+        const storedRefreshToken = await AsyncStorage.getItem('refreshToken');
+        if(storedRefreshToken) {
+          const response = await axios.post('https://coinsage-backend.onrender.com/api/auth/refresh-token', { refreshToken: storedRefreshToken });
+          const { token, refreshToken: newRefreshToken } = response.data;
+          await AsyncStorage.setItem('token', token);
+          await AsyncStorage.setItem('refreshToken', newRefreshToken);
+          setAccessToken(token);
+          setRefreshToken(newRefreshToken);
+          return true;
+        }
+        return false;
+      } catch(error) {
+        console.error('Token refresh failed: ', error);
+        await logout();
+        return false;
+      }
+    };
+
     const bootstrapApp = async() => {
       try {
         const storedToken = await AsyncStorage.getItem('token');
@@ -55,15 +43,10 @@ function App() {
           if(isRefreshed) {
             setAccessToken(storedToken);
             setRefreshToken(storedRefreshToken);
-            setInitialRoute('Main');
 
             const userResponse = await getUser();
             setUser(userResponse.data.data.user);
-          } else {
-            setInitialRoute('Login');
           }
-        } else {
-          setInitialRoute('Login');
         }
       } catch(error) {
         console.error('Bootstrap error: ', error);
@@ -74,7 +57,7 @@ function App() {
       }
     };
     bootstrapApp();
-  }, []);
+  }, [setUser, setAccessToken, setRefreshToken, logout]);
 
   if(isLoading) {
     return (
@@ -83,16 +66,29 @@ function App() {
       </View>
       );
   }
-
-  return (
-    <UserContext.Provider value={{ user, accessToken, refreshToken, logout }}>
-      <NavigationContainer>
-        <AppNavigator />
-      </NavigationContainer>
-    </UserContext.Provider>
-  );
+  return <AppNavigator />
 }
 
-export default registerRootComponent(App);
+function App() {
+  const [user, setUser] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
+  const [refreshToken, setRefreshToken] = useState(null);
 
-export const useUser = () => useContext(UserContext);
+  const logout = async() => {
+    await AsyncStorage.multiRemove(['token', 'refreshToken']);
+    setAccessToken(null);
+    setRefreshToken(null);
+    setUser(null);
+  };
+
+  return (
+    <UserProvider value={{ user, accessToken, refreshToken, logout, setUser, setAccessToken, setRefreshToken }}>
+      <NavigationContainer>
+        <AppContent />
+      </NavigationContainer>
+    </UserProvider>
+  );
+}
+  
+
+export default registerRootComponent(App);
