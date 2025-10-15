@@ -1,12 +1,13 @@
 import React, { useContext } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text, View, TouchableOpacity } from 'react-native';
-import { useUser } from '../App';
+import { useUser } from '../src/contexts/UserContext';
 import { useNavigation } from '@react-navigation/native'
 import TransactionsScreen from '../screens/Transactions/TransactionsScreen';
 import BudgetsScreen from '../screens/Budgets/BudgetsScreen';
 import AnalyticsScreen from '../screens/Analytics/AnalyticsScreen';
 import AIModelLogScreen from '../screens/AI Model Log/AIModelLogScreen';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const Tab = createBottomTabNavigator();
 
@@ -32,18 +33,51 @@ function MainTabNavigator() {
     }
     
     return (
-        <Tab.Navigator>
-            <Tab.Screen name='Transactions' component={TransactionsScreen} />
-            <Tab.Screen name='Budgets' component={BudgetsScreen} />
-            <Tab.Screen name='Analytics' component={AnalyticsScreen} />
-            <Tab.Screen name='AI Model Log' component={AIModelLogScreen} />
+        <Tab.Navigator
+            screenOptions={{
+                tabBarActiveTintColor: '#007AFF',
+                tabBarInactiveTintColor: '#666',
+            }}
+        >
+            <Tab.Screen
+                name='Transactions'
+                component={TransactionsScreen}
+                options={{
+                    tabBarIcon: ({ color, size }) => <Icon name='list' color={color} size={size} />
+                }}
+            />
+            <Tab.Screen
+                name='Budgets'
+                component={BudgetsScreen}
+                options={{
+                    tabBarIcon: ({ color, size }) => <Icon name='account-balance' color={color} size={size} />
+                }}
+            />
+            <Tab.Screen
+                name='Analytics'
+                component={AnalyticsScreen}
+                options={{
+                    tabBarIcon: ({ color, size }) => <Icon name='bar-chart' color={color} size={size} />
+                }}
+            />
+            <Tab.Screen
+                name='AI Model Log'
+                component={AIModelLogScreen}
+                options={{
+                    tabBarIcon: ({ color, size }) => <Icon name='model-training' color={color} size={size} />
+                }}
+            />
             <Tab.Screen
                 name='Logout'
                 component={() => {
                     logout();
                     return null;
                 }}
-                options={{ tabBarLabel: 'Logout' }}
+                options={{
+                    tabBarLabel: 'Logout',
+                    tabBarIcon: ({ color, size }) => <Icon name='logout' color={color} size={size} />
+                }}
+
             />
         </Tab.Navigator>
     );
