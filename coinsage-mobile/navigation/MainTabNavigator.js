@@ -21,6 +21,8 @@ function MainTabNavigator() {
     const { user, logout } = useUser();
     const navigation = useNavigation();
 
+    console.log('MainTabNavigator rendering..');
+
     if(!user) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

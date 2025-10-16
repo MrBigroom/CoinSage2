@@ -4,6 +4,8 @@ import { format } from "date-fns";
 import styles from './TransactionsStyles';
 
 const TransactionItem = ({ transaction, onEdit }) => {
+    console.log('TransactionItem styles:', styles);
+
     return (
         <View style={styles.transactionItem}>
             <View>

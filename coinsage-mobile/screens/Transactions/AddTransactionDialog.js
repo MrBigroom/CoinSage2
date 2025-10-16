@@ -37,6 +37,8 @@ const AddTransactionDialog = ({ isVisible, onClose, onTransactionAdded }) => {
         }
     };
 
+    console.log('AddTransactionDialog styles:', styles);
+
     return (
         <Modal isVisible={isVisible} onBackdropPress={onClose}>
             <View style={styles.modalContainer}>

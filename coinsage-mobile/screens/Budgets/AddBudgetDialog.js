@@ -40,6 +40,8 @@ const AddBudgetDialog = ({ isVisible, onClose, onBudgetAdded }) => {
         }
     }, [isVisible]);
 
+    console.log('AddBudgetDialog styles: ', styles);
+
     return (
         <Modal isVisible={isVisible} onBackdropPress={onClose}>
             <View style={styles.modalContainer}>

@@ -51,7 +51,7 @@ loadRoutes('./routes/auth', '/api/auth', 'Auth');
 loadRoutes('./routes/categories', '/api/categories', 'Category');
 loadRoutes('./routes/transactions', '/api/transactions', 'Transactions');
 loadRoutes('./routes/budgets', '/api/budgets', 'Budgets');
-loadRoutes('./routes/ai', '/api.ai', 'AI');
+loadRoutes('./routes/ai', '/api/ai', 'AI');
 
 app.use((err, req, res, next) => {
     console.error(err.stack);

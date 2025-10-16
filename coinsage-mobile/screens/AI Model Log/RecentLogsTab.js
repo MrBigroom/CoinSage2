@@ -23,6 +23,8 @@ const RecentLogsTab = () => {
         fetchLogs();
     }, []);
 
+    console.log('RecentLogsTab styles: ', styles);
+
     return (
         <View style={styles.tabContainer}>
             {loading ? (
@@ -35,9 +37,9 @@ const RecentLogsTab = () => {
                         <LogItem
                             title={item.transaction_id.title}
                             date={item.transaction_id.date}
-                            predictedCategory={item.predictedCategory}
+                            predictedCategory={item.predicted_category}
                             confidence={item.confidence_score}
-                            actualCategory={item.status === 'Incorrect' ? item.actualCategory : null}
+                            actualCategory={item.status === 'Incorrect' ? item.actual_category : null}
                             status={item.status}
                             amount={item.transaction_id.transaction_amount}
                         />

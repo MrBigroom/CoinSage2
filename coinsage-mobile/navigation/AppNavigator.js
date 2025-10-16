@@ -8,9 +8,13 @@ import MainTabNavigator from './MainTabNavigator';
 const Stack = createStackNavigator();
 
 function AppNavigator() {
-    const { user, accessToken, logout } = useUser();
+    const { user } = useUser();
+
+    console.log('AppNavigator rendering...');
+
     return (
         <Stack.Navigator
+            initialRouteName='Login'
             screenOptions={{ headerShown: false }}
         >
             {!user ? (

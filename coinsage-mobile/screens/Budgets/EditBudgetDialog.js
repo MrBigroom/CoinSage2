@@ -64,6 +64,8 @@ const EditBudgetDialog = ({ isVisible, onClose, budget, onBudgetUpdated }) => {
         );
     };
 
+    console.log('EditBudgetDialog styles:', styles);
+
     return (
         <Modal isVisible={isVisible} onBackdropPress={onClose}>
             <View style={styles.modalContainer}>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Alert, ScrollView } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { getTransactions, getBalance } from "../../src/services/api";
 import AddTransactionDialog from "./AddTransactionDialog";
 import EditTransactionDialog from "./EditTransactionDialog";
@@ -35,6 +35,9 @@ const TransactionsScreen = () => {
         setSelectedTransaction(transaction);
         setEditDialogVisible(true);
     };
+
+    console.log('TransactionsScreen styles:', styles);
+    console.log('Rendering TransactionsScreen');
 
     return (
         <View style={styles.container}>

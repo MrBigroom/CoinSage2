@@ -8,6 +8,8 @@ const BudgetItem = ({ budget, onEdit }) => {
     const spentPercentage = (budget.spent_amount / budget.budget_amount) * 100;
     const riskLevel = spentPercentage > 100 ? 'Exceeded!' : spentPercentage >= 80 ? 'Almost Full' : 'On Track';
 
+    console.log('BudgetItem styles: ', styles);
+
     return (
         <View style={styles.budgetItem}>
             <View style={styles.budgetLeft}>
@@ -39,4 +41,5 @@ const BudgetItem = ({ budget, onEdit }) => {
     );
 };
 
+BudgetItem.displayName = 'BudgetItem';
 export default BudgetItem;

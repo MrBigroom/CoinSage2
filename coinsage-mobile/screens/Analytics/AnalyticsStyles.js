@@ -6,12 +6,6 @@ export default StyleSheet.create({
         backgroundColor: '#F5F5F5',
         padding: 20,
     },
-    scrollContainer: {
-        flexGrow: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingVertical: 20,
-    },
     title: {
         fontSize: 28,
         fontWeight: 'bold',
@@ -42,9 +36,9 @@ export default StyleSheet.create({
         height: 50,
         fontSize: 16,
     },
-    chart: {
-        height: 200,
-        marginBottom: 10,
+    chartContainer: {
+        alignItems: 'center',
+        marginBottom: 20,
     },
     legend: {
         marginTop: 10,
@@ -55,40 +49,19 @@ export default StyleSheet.create({
         marginBottom: 5,
     },
     legendColor: {
-        width: 15,
-        height: 15,
-        marginRight: 10,
-        borderRadius: 3,
+        width: 12,
+        height: 12,
+        marginRight: 8,
+        borderRadius: 2,
     },
     legendText: {
         fontSize: 14,
         color: '#333',
     },
-    barLabels: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 10,
-    },
-    barLabel: {
-        fontSize: 14,
-        color: '#333',
-        fontWeight: '500',
-    },
-    lineLabels: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 10,
-    },
-    lineLabel: {
-        fontSize: 12,
-        color: '#333',
-        fontWeight: '500',
-    },
     emptyText: {
         fontSize: 16,
         color: '#666',
         textAlign: 'center',
-        marginTop: 10,
-        marginBottom: 20,
+        marginVertical: 20,
     },
 });

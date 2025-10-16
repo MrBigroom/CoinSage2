@@ -3,6 +3,8 @@ import { View, Text } from 'react-native';
 import styles from './AIModelLogStyles';
 
 const PerformanceItem = ({ categoryName, totalTransactions, accuracy, averageConfidence }) => {
+    console.log('PerformanceItem styles: ', styles);
+
     return (
         <View style={styles.performanceItem}>
             <Text style={styles.performanceText}>{categoryName}</Text>

@@ -48,6 +48,9 @@ const SignupScreen = () => {
         }
     };
 
+    console.log('SignupScreen styles', styles);
+    console.log('Rendering SignupScreen');
+
     return (
         <ScrollView
             style={styles.container}

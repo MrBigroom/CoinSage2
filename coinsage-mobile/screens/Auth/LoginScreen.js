@@ -34,6 +34,9 @@ const LoginScreen = () => {
         }
     }
 
+    console.log('LoginScreen styles: ', styles);
+    console.log('Rendering LoginScreen');
+
     return (
         <ScrollView
             style={styles.container}

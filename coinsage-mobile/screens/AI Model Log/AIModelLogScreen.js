@@ -27,6 +27,9 @@ const AIModelLogScreen = () => {
         fetchOverallAccuracy();
     }, []);
 
+    console.log('AIModelLogScreen styles: ', styles);
+    console.log('Rendering AIModelLogScreen');
+
     return (
         <ScrollView
             style={styles.container}

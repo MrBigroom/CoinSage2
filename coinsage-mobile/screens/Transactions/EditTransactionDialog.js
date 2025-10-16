@@ -84,6 +84,8 @@ const EditTransactionDialog = ({ isVisible, onClose, transaction, onTransactionU
         }
     }, [transaction]);
 
+    console.log('EditTransactionDialog styles:', styles);
+
     return (
         <Modal isVisible={isVisible} onBackdropPress={onClose}>
             <View style={styles.modalContainer}>

@@ -23,6 +23,8 @@ const PerformanceTab = () => {
         fetchPerformance();
     }, []);
 
+    console.log('PerformanceTab styles: ', styles);
+
     return (
         <View style={styles.tabContainer}>
             {loading ? (
@@ -33,8 +35,8 @@ const PerformanceTab = () => {
                     keyExtractor={(item) => item.category_name}
                     renderItem={({ item }) => (
                         <PerformanceItem
-                            category_name={item.category_name}
-                            totalTransactions={item.totalTransactions}
+                            categoryName={item.category_name}
+                            totalTransactions={item.total_transactions}
                             accuracy={item.accuracy}
                             averageConfidence={item.average_confidence}
                         />

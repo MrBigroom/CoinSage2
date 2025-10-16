@@ -4,6 +4,8 @@ import { format } from 'date-fns';
 import styles from './AIModelLogStyles';
 
 const LogItem = ({ title, date, predictedCategory, confidence, actualCategory, status, amount }) => {
+    console.log('LogItem styles: ', styles);
+    
     return (
         <View style={styles.logItem}>
             <View>

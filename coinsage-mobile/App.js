@@ -12,6 +12,8 @@ function AppContent() {
   const [isLoading, setIsLoading] = useState(true);
   const { setUser, setAccessToken, setRefreshToken, logout } = useUser();
 
+  console.log('AppContent rendering, isLoading', isLoading);
+  
   useEffect(() => {
     const refreshAccessToken = async() => {
       try {
@@ -60,12 +62,14 @@ function AppContent() {
   }, [setUser, setAccessToken, setRefreshToken, logout]);
 
   if(isLoading) {
+    console.log('AppContent showing loader');
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" color="#007AFF"></ActivityIndicator>
       </View>
       );
   }
+  console.log('AppContent rendering AppNavigator');
   return <AppNavigator />
 }
 

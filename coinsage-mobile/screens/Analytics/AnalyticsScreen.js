@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ActivityIndicator, ScrollView, Alert } from 'react-native';
-import { PieChart, BarChart, LineChart } from 'react-native-svg-charts';
+import { View, Text, ActivityIndicator, ScrollView, Alert, Dimensions } from 'react-native';
+import { PieChart, BarChart, LineChart } from 'react-native-chart-kit';
 import { Picker } from '@react-native-picker/picker';
 import { format, startOfWeek, endOfWeek, eachDayOfInterval, startOfMonth, endOfMonth, subMonths, formatISO } from 'date-fns';
 import { getTransactions, getCategories } from "../../src/services/api";
 import styles from './AnalyticsStyles';
+
+const screenWidth = Dimensions.get('window').width;
 
 const AnalyticsScreen = () => {
     const [transactions, setTransactions] = useState([]);
@@ -103,13 +105,19 @@ const AnalyticsScreen = () => {
     const barData = getMonthlyIncomeExpense();
     const lineData = getWeeklySpending();
 
+    console.log('AnalyticsScreen styles: ', styles);
+    console.log('Rendering AnalyticsScreen');
+
+    if(loading) {
+        return (
+            <View style={styles.container}>
+                <ActivityIndicator size="large" color="#007AFF" />
+            </View>
+        )
+    }
+
     return (
-        <ScrollView
-            style={styles.container}
-            contentContainerStyle={styles.scrollContainer}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
-        >
+        <ScrollView style={styles.container}>
             <Text style={styles.title}>Analytics</Text>
 
             <Text style={styles.sectionTitle}>Select Month</Text>
@@ -127,19 +135,32 @@ const AnalyticsScreen = () => {
 
             <Text style={styles.sectionTitle}>Spending by Category ({monthOptions.find((o) => o.value === selectedMonth)?.label})</Text>
             {pieData.length > 0 ? (
-                <View>
+                <View style={styles.chartContainer}>
                     <PieChart
                         style={styles.chart}
+                        width={screenWidth - 40}
+                        height={220}
                         data={pieData}
+                        chartConfig={{
+                            backgroundColor: '#FFF',
+                            backgroundGradientFrom: '#FFF',
+                            backgroundGradientTo: '#FFF',
+                            decimalPlaces: 2,
+                            color: (opacity = 1) => `rgba(0, 122, 255, ${opacity})`,
+                            labelColor: () => '#333',
+                        }}
+                        accessor="value"
+                        backgroundColor="transparent"
+                        paddingLeft="15"
                         innerRadius="0"
-                        padAngle={0.02}
+                        absolute
                     />
                     <View style={styles.legend}>
                         {pieData.map((item) => (
-                            <View key={item.key} style={styles.legendItem}>
-                                <View style={[styles.legendColor, { backgroundColor: item.svg.fill }]} />
+                            <View key={item.name} style={styles.legendItem}>
+                                <View style={[styles.legendColor, { backgroundColor: item.color }]} />
                                 <Text style={styles.legendText}>
-                                    {item.key}: RM{(item.value).toFixed(2)} ({((item.value / pieData.reduce((sum, d) => sum + d.value, 0)) * 100).toFixed(1)}%)
+                                    {item.name}: RM{(item.value).toFixed(2)} ({((item.value / pieData.reduce((sum, d) => sum + d.value, 0)) * 100).toFixed(1)}%)
                                 </Text>
                             </View>
                         ))}
@@ -151,32 +172,60 @@ const AnalyticsScreen = () => {
 
             <Text style={styles.sectionTitle}>Monthly Income vs Expense</Text>
             <BarChart
-                style={styles.chart}
-                data={barData}
-                gridMin={0}
-                yAccessor={({ item }) => item.value}
-                contentInset={{ top: 20, bottom: 20 }}
-            >
-                <View style={styles.barLabels}>
-                    <Text style={styles.barLabel}>Income: RM{barData[0].value.toFixed(2)}</Text>
-                    <Text style={styles.barLabel}>Expense: RM{barData[1].value.toFixed(2)}</Text>
-                </View>
-            </BarChart>
+                style={{
+                    marginVertical: 8,
+                    borderRadius: 16,
+                }}
+                data={{
+                    labels: barData((item) => item.name),
+                    datasets: [{ data: barData.map((item) => item.value) }],
+                }}
+                width={screenWidth - 40}
+                height={220}
+                chartConfig={{
+                    backgroundColor: '#FFF',
+                    backgroundGradientFrom: '#FFF',
+                    backgroundGradientTo: '#FFF',
+                    decimalPlaces: 2,
+                    color: (opacity = 1) => `rgba(0, 122, 255, ${opacity})`,
+                    labelColor: () => '#333',
+                    style: { borderRadius: 16 },
+                    propsForDots: {
+                        r: '6',
+                        strokeWidth: '2',
+                        stroke: '#ffa726',
+                    },
+                }}
+            />
 
             <Text style={styles.sectionTitle}>This Week&apos;s Spending Pattern</Text>
             {lineData.some((value) => value > 0) ? (
                 <LineChart
-                    style={styles.chart}
-                    data={lineData}
-                    svg={{ stroke: '#007AFF', strokeWidth: 2 }}
-                    contentInset={{ top: 20, bottom: 20 }}
-                >
-                    <View style={styles.lineLabels}>
-                        {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => (
-                            <Text key={day} style={styles.lineLabel}>{day}</Text>
-                        ))}
-                    </View>
-                </LineChart>
+                    style={{
+                        marginVertical: 8,
+                        borderRadius: 16,
+                    }}
+                    data={{
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{ data: lineData }],
+                    }}
+                    width={screenWidth - 40}
+                    height={220}
+                    chartConfig={{
+                        backgroundColor: '#FFF',
+                        backgroundGradientFrom: '#FFF',
+                        backgroundGradientTo: '#FFF',
+                        decimalPlaces: 2,
+                        color: (opacity = 1) => `rgba(0, 122, 255, ${opacity})`,
+                        labelColor: () => '#333',
+                        style: { borderRadius: 16 },
+                        propsForDots: {
+                            r: '6',
+                            strokeWidth: '2',
+                            stroke: '#ffa726',
+                        },
+                    }}
+                />
             ) : (
                 <Text style={styles.emptyText}>No spending this week</Text>
             )}
