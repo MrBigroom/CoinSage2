@@ -17,7 +17,7 @@ const TransactionsScreen = () => {
     const fetchTransactions = async() => {
         try {
             setLoading(true);
-            const [transactionResponse, balanceResponse] = await Promise.all([getTransactions(), getBalance(),]);
+            const [transactionResponse, balanceResponse] = await Promise.all([getTransactions(), getBalance()]);
             setTransactions(transactionResponse.data.data);
             setBalance(balanceResponse.data.data.balance);
         } catch(error) {

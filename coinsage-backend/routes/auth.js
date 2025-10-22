@@ -21,14 +21,15 @@ const signRefreshToken = (id) => {
 const createSendToken = (user, statusCode, res) => {
     const token = signToken(user._id);
     user.password_hash = undefined;
+
+    const refreshToken = signRefreshToken(user._id);
+    res.cookie('refreshToken', refreshToken, { httpOnly: true });
+    
     res.status(statusCode).json({
         success: true,
         token,
         data: { user }
     });
-
-    const refreshToken = signRefreshToken(user._id);
-    res.cookie('refreshToken', refreshToken, { httpOnly: true });
 };
 
 router.post('/refresh-token', async(req, res) => {

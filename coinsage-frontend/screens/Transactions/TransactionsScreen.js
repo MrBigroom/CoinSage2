@@ -7,7 +7,6 @@ import api from "../../src/services/api";
 import styles from "../Auth/AuthStyles";
 
 const TransactionsScreen = () => {
-    const { logout } = useContext(AuthContext);
     const navigation = useNavigation();
     const [transactions, setTransactions] = useState([]);
     const [balance, setBalance] = useState(0);
@@ -50,9 +49,7 @@ const TransactionsScreen = () => {
                 keyExtractor={(item) => item._id}
                 style={styles.list}
             />
-            <TouchableOpacity style={styles.cancelButton} onPress={logout}>
-                <Text style={styles.buttonText}>Logout</Text>
-            </TouchableOpacity>
+            
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AddTransaction')}>
                 <Text style={styles.buttonText}>Add Transaction</Text>
             </TouchableOpacity>

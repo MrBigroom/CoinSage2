@@ -35,6 +35,7 @@ export const AuthProvider = ({ children }) => {
                 const { token, data: { user } } = response.data;
                 await AsyncStorage.setItem('token', token);
                 await AsyncStorage.setItem('user', JSON.stringify(user));
+                api.defaults.headers.Authorization = `Bearer ${token}`;
                 setToken(token);
                 setUser(user);
             }
@@ -47,11 +48,7 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await api.post('/api/auth/register', { username, email, password });
             if(response.data.success) {
-                const { token, data: { user } } = response.data;
-                await AsyncStorage.setItem('token', token);
-                await AsyncStorage.setItem('user', JSON.stringify(user));
-                setToken(token);
-                setUser(user);
+                
             } 
         } catch(error) {
                 throw new Error(error.response?.data?.message || 'Sign up failed');

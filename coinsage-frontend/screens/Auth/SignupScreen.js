@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../../src/contexts/AuthContext";
 import styles from "./AuthStyles";
 
@@ -24,8 +25,9 @@ const SignupSchema = Yup.object().shape({
                             .required('Confirm password is required'),
 });
 
-const SignupScreen = ({ navigation }) => {
+const SignupScreen = () => {
     const { signup } = useContext(AuthContext);
+    const navigation = useNavigation();
 
     const handleSignup = async(values, { setSubmitting, setErrors }) => {
         try {

@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../../src/contexts/AuthContext";
 import styles from "./AuthStyles";
 
@@ -13,13 +14,14 @@ const LoginSchema = Yup.object().shape({
                     .required('Password is required'),
 });
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = () => {
     const { login } = useContext(AuthContext);
+    const navigation = useNavigation();
 
     const handleLogin = async(values, { setSubmitting, setErrors }) => {
         try {
             await login(values.username, values.password);
-            navigation.replace('Transactions');
+            navigation.replace('Tab');
         } catch(error) {
             setErrors({ submit: error.message || 'Login failed' });
         } finally {

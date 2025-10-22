@@ -4,9 +4,15 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { AuthContext } from "../src/contexts/AuthContext";
 import LoginScreen from "../screens/Auth/LoginScreen";
 import SignupScreen from "../screens/Auth/SignupScreen";
-import TransactionsScreen from "../screens/Transactions/TransactionsScreen";
 import AddTransactionDialog from "../screens/Transactions/AddTransactionDialog";
 import EditTransactionDialog from "../screens/Transactions/EditTransactionDialog";
+import AddBudgetDialog from "../screens/Budgets/AddBudgetDialog";
+import EditBudgetDialog from "../screens/Budgets/EditBudgetDialog";
+import TransactionsScreen from "../screens/Transactions/TransactionsScreen";
+import BudgetsScreen from "../screens/Budgets/BudgetsScreen";
+import AnalyticsScreen from "../screens/Analytics/AnalyticsScreen";
+import AIModelLogScreen from "../screens/AI Model Log/AIModelLogScreen";
+import MainTabNavigator from "./MainTabNavigator";
 
 const Stack = createStackNavigator();
 
@@ -20,12 +26,12 @@ const AppNavigator = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator
-                initialRouteName={user ? 'Transactions' : 'Login'}
+                initialRouteName={user ? 'Tab' : 'Login'}
                 screenOptions={{ headerShown: false }}
             >
                 {user ? (
                     <>
-                        <Stack.Screen name="Transactions" component={TransactionsScreen} />
+                        <Stack.Screen name="Tab" component={MainTabNavigator} />
                         <Stack.Screen
                             name="AddTransaction"
                             component={AddTransactionDialog}
@@ -36,6 +42,20 @@ const AppNavigator = () => {
                             component={EditTransactionDialog}
                             options={{ presentation: 'modal' }}
                         />
+                        <Stack.Screen
+                            name="AddBudget"
+                            component={AddBudgetDialog}
+                            options={{ presentation: 'modal' }}
+                        />
+                        <Stack.Screen
+                            name="EditBudget"
+                            component={EditBudgetDialog}
+                            options={{ presentation: 'modal' }}
+                        />
+                        <Stack.Screen name="Transactions" component={TransactionsScreen} />
+                        <Stack.Screen name="Budgets" component={BudgetsScreen} />
+                        <Stack.Screen name="Analytics" component={AnalyticsScreen} />
+                        <Stack.Screen name="AIModelLog" component={AIModelLogScreen} />
                     </>
                         
                 ) : (

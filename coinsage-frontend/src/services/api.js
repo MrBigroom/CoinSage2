@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 const api = axios.create({
@@ -20,9 +21,19 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
     (response) => response,
-    (error) => {
-        if(error.response?.status === 401) {
-            console.error('Unauthorised, token may have expired');
+    async(error) => {
+        const originalRequest = error.config;
+        if(error.response.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+            try {
+                const refreshResponse = await api.post('/api/auth/refresh-token', { refreshToken: await AsyncStorage.getItem('refreshToken') });
+                const { token } = refreshResponse.data;
+                await AsyncStorage.setItem('token', token);
+                api.defaults.headers.Authorization = `Bearer ${token}`;
+                return api(originalRequest);
+            } catch(refreshError) {
+                console.error('Refresh token failed: ', refreshError);
+            }
         }
         return Promise.reject(error);
     }
