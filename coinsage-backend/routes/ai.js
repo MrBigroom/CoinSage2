@@ -9,7 +9,7 @@ const Transactions = require('../models/Transactions');
 router.post('/categorise', protect, async(req, res) => {
     try{
         const { transaction_id, title, transaction_amount } = req.body;
-        const aiResponse = await axios.post(`${process.env.AI_SERVICE_URL}`, {
+        const aiResponse = await axios.post(`${process.env.AI_SERVICE_URL}/categorise`, {
             title,
             amount: transaction_amount
         });
