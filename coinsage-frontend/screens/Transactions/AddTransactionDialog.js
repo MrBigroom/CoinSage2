@@ -26,7 +26,7 @@ const AddTransactionDialog = () => {
     const handlePredictCategory = async(values, setFieldValue) => {
         if(values.title && values.transaction_amount) {
             try {
-                const response = await api.post('/api/transactions', {
+                const response = await api.post('/api/ai/categorise', {
                     title: values.title,
                     transaction_amount: values.transaction_amount * (values.type === 'Income' ? 1 : -1),
                 });

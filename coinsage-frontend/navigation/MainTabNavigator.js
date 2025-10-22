@@ -16,7 +16,7 @@ const LogoutScreen = () => {
 
     useEffect(() => {
         logout();
-        navigation.reset({
+        navigation.getParent().reset({
             index: 0,
             routes: [{ name: 'Login' }],
         });

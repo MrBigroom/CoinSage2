@@ -35,10 +35,7 @@ router.post('/', protect, async(req, res) => {
         const { category, confidence } = aiResponse.data;
         const categoryDoc = await Category.findOne({ name: category });
         if(!categoryDoc) {
-            return res.status(400).json({
-                success: false,
-                message: 'AI-predicted category not found'
-            });
+            categoryDoc = await Category.create({ name: category, type: transaction_amount > 0 ? 'Income' : 'Expense' })
         }
         category_id = categoryDoc._id;
 
@@ -50,7 +47,7 @@ router.post('/', protect, async(req, res) => {
         });
 
         const transaction = await Transactions.create({
-            user_id: req.user_id,
+            user_id: req.user._id,
             category_id,
             title,
             transaction_amount,
