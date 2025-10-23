@@ -9,7 +9,7 @@ const transactionSchema = new mongoose.Schema({
     category_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
-        required: true,
+        required: true
     },
     title: {
         type: String,
@@ -18,8 +18,7 @@ const transactionSchema = new mongoose.Schema({
     },
     transaction_amount: {
         type: Number,
-        required: true,
-        min: 0.01
+        required: true
     },
     date: {
         type: Date,
