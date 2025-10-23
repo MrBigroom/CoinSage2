@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const AIModelLog = require('../models/AIModelLog');
-const Category = require('../models/Category');
 const axios = require('axios');
 const { protect } = require('../middlewares/auth');
 const Transactions = require('../models/Transactions');

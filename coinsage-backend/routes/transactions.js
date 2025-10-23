@@ -28,45 +28,51 @@ router.post('/', protect, async(req, res) => {
     try {
         const { category_id, title, transaction_amount, date, description } = req.body;
 
-        const aiResponse = await axios.post('https://coinsage-ai-service.onrender.com/categorise', {
-            title,
-            amount: transaction_amount
-        });
-        const { category, confidence } = aiResponse.data;
-        const categoryDoc = await Category.findOne({ name: category });
-        if(!categoryDoc) {
-            categoryDoc = await Category.create({ name: category, type: transaction_amount > 0 ? 'Income' : 'Expense' })
+        let categoryDoc = predicted_category ? await Category.findOne({ name: predicted_category }) : null;
+        if (!categoryDoc && predicted_category) {
+            categoryDoc = await Category.create({ name: predicted_category, type: transaction_amount > 0 ? 'Income' : 'Expense' });
         }
-        category_id = categoryDoc._id;
+        const usedCategoryId = category_id || (categoryDoc ? categoryDoc._id : null);
 
-        await AIModelLog.create({
+        if (!usedCategoryId) {
+            const aiResponse = await axios.post('https://coinsage-ai-service.onrender.com/categorise', {
+                title,
+                amount: transaction_amount
+            });
+            const { category, confidence } = aiResponse.data;
+            categoryDoc = await Category.findOne({ name: category });
+            if (!categoryDoc) {
+                categoryDoc = await Category.create({ name: category, type: transaction_amount > 0 ? 'Income' : 'Expense' });
+            }
+            usedCategoryId = categoryDoc._id;
+        }
+
+        const log = await AIModelLog.create({
             transaction_id: null,
-            category_id,
-            predicted_category: category,
-            confidence_score: confidence
+            category_id: usedCategoryId,
+            predicted_category: predicted_category || category,
+            confidence_score: confidence || 0.9
         });
 
         const transaction = await Transactions.create({
             user_id: req.user._id,
-            category_id,
+            category_id: usedCategoryId,
             title,
             transaction_amount,
             date: date || Date.now(),
             description
         });
 
-        if(!req.body.category_id) {
-            await AIModelLog.updateOne(
-                { transaction_id: null, predicted_category: transaction.category_id.name },
-                { transaction_id: transaction._id }
-            );
-        }
+        await AIModelLog.updateOne(
+            { _id: log._id },
+            { transaction_id: transaction._id }
+        );
 
         if(transaction_amount < 0) {
             await Budgets.updateMany(
                 {
                     user_id: req.user._id,
-                    category_id,
+                    category_id: usedCategoryId,
                     start_date: { $lte: transaction.date },
                     end_date: { $gte: transaction.date }
                 },
@@ -75,6 +81,7 @@ router.post('/', protect, async(req, res) => {
         }
         res.status(201).json({ success: true, data: transaction });
     } catch(error) {
+        console.error('Transaction creation error: ', error);
         res.status(400).json({ success: false, message: error.messge });
     }
 });
