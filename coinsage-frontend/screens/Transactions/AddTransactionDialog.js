@@ -36,6 +36,7 @@ const AddTransactionDialog = () => {
                         confidence: response.data.data.confidence,
                     });
                     setFieldValue('predicted_category', response.data.data.category);
+                    setFieldValue('predicted_confidence', response.data.data.confidence);
                 }
             } catch(error) {
                 console.error('Prediction error: ', error);
@@ -49,6 +50,7 @@ const AddTransactionDialog = () => {
                 ...values,
                 transaction_amount: values.transaction_amount * (values.type === 'Income' ? 1 : -1),
                 predicted_category: values.predicted_category,
+                confidence: values.predicted_confidence,
             });
             if(response.data.success) {
                 navigation.goBack();

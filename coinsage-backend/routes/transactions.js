@@ -27,20 +27,22 @@ router.get('/', protect, async(req, res) => {
 
 router.post('/', protect, async(req, res) => {
     try {
-        const { category_id, title, transaction_amount, date, description, predicted_category, confidence } = req.body;
+        const { category_id, title, transaction_amount, date, description, predicted_category, predicted_confidence } = req.body;
 
         let categoryDoc = predicted_category ? await Category.findOne({ name: predicted_category }) : null;
         if (!categoryDoc && predicted_category) {
             categoryDoc = await Category.create({ name: predicted_category, type: transaction_amount > 0 ? 'Income' : 'Expense' });
         }
-        const usedCategoryId = category_id || (categoryDoc ? categoryDoc._id : null);
+        let usedCategoryId = category_id || (categoryDoc ? categoryDoc._id : null);
+        let confidence = predicted_confidence;
 
         if (!usedCategoryId) {
             const aiResponse = await axios.post('https://coinsage-ai-service.onrender.com/categorise', {
                 title,
                 amount: transaction_amount
             });
-            const { category, confidence } = aiResponse.data;
+            const { category, confidence: aiConfidence } = aiResponse.data;
+            confidence = aiConfidence;
             categoryDoc = await Category.findOne({ name: category });
             if (!categoryDoc) {
                 categoryDoc = await Category.create({ name: category, type: transaction_amount > 0 ? 'Income' : 'Expense' });
