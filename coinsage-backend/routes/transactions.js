@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Transactions = require('../models/Transactions');
+const Budgets = require('../models/Budgets');
 const AIModelLog = require('../models/AIModelLog');
 const Category = require('../models/Category');
 const { protect } = require('../middlewares/auth');
@@ -26,7 +27,7 @@ router.get('/', protect, async(req, res) => {
 
 router.post('/', protect, async(req, res) => {
     try {
-        const { category_id, title, transaction_amount, date, description } = req.body;
+        const { category_id, title, transaction_amount, date, description, predicted_category } = req.body;
 
         let categoryDoc = predicted_category ? await Category.findOne({ name: predicted_category }) : null;
         if (!categoryDoc && predicted_category) {
