@@ -27,7 +27,7 @@ router.get('/', protect, async(req, res) => {
 
 router.post('/', protect, async(req, res) => {
     try {
-        const { category_id, title, transaction_amount, date, description, predicted_category } = req.body;
+        const { category_id, title, transaction_amount, date, description, predicted_category, confidence } = req.body;
 
         let categoryDoc = predicted_category ? await Category.findOne({ name: predicted_category }) : null;
         if (!categoryDoc && predicted_category) {
@@ -52,7 +52,7 @@ router.post('/', protect, async(req, res) => {
             transaction_id: null,
             category_id: usedCategoryId,
             predicted_category: predicted_category || category,
-            confidence_score: confidence || 0.9
+            confidence_score: confidence
         });
 
         const transaction = await Transactions.create({
