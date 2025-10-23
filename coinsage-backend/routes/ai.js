@@ -34,6 +34,7 @@ router.post('/categorise', protect, async(req, res) => {
             }
         });
     } catch(error) {
+        console.error('Categorise error: ', error);
         res.status(500).json({
             success: false,
             message: error.message

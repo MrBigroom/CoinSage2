@@ -4,7 +4,7 @@ const aiModelLogSchema = new mongoose.Schema({
     transaction_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Transactions',
-        required: true
+        required: false
     },
     category_id: {
         type: mongoose.Schema.Types.ObjectId,
