@@ -19,8 +19,7 @@ router.post('/categorise', protect, async(req, res) => {
             success: true,
             data: {
                 category: category,
-                confidence,
-                log
+                confidence
             }
         });
     } catch(error) {
