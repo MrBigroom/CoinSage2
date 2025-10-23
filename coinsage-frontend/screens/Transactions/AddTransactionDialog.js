@@ -32,10 +32,10 @@ const AddTransactionDialog = () => {
                 });
                 if(response.data.success) {
                     setPrediction({
-                        category: response.data.data.category_id.name,
-                        confidence: response.data.data.confidence_score || 0.9,
+                        category: response.data.data.category,
+                        confidence: response.data.data.confidence,
                     });
-                    setFieldValue('category_id', response.data.data.category_id._id);
+                    setFieldValue('predicted_category', response.data.data.category);
                 }
             } catch(error) {
                 console.error('Prediction error: ', error);
@@ -48,6 +48,7 @@ const AddTransactionDialog = () => {
             const response = await api.post('/api/transactions', {
                 ...values,
                 transaction_amount: values.transaction_amount * (values.type === 'Income' ? 1 : -1),
+                predicted_category: values.predicted_category,
             });
             if(response.data.success) {
                 navigation.goBack();

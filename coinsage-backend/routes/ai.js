@@ -14,21 +14,11 @@ router.post('/categorise', protect, async(req, res) => {
             amount: transaction_amount
         });
         const { category, confidence } = aiResponse.data;
-        const categoryDoc = await Category.findOne({ name: category });
-        if(!categoryDoc) {
-            categoryDoc = await Category.create({ name: category, type: transaction_amount > 0 ? 'Income' : 'Expense' });
-        }
-
-        const log = await AIModelLog.create({
-            transaction_id,
-            category_id: categoryDoc._id,
-            predicted_category: category,
-            confidence_score: confidence
-        });
+        
         res.json({
             success: true,
             data: {
-                category: categoryDoc,
+                category: category,
                 confidence,
                 log
             }
